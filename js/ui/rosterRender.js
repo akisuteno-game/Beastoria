@@ -7,9 +7,9 @@ import { ATTRIBUTES, rarityToStars } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
 
 function stageLabel(instance) {
-  if (instance.transformationStage > 0) return `異姿化 第${instance.transformationStage}段階`;
-  if (instance.evolutionStage >= 2) return '進化第2形態';
-  return '基本形態';
+  const branch = instance.transformationStage > 0 ? '異姿化ルート' : '通常ルート';
+  if (instance.evolutionStage >= 2) return `${branch} 進化${instance.evolutionStage - 1}段階`;
+  return instance.transformationStage > 0 ? '異姿化(基本形)' : '基本形態';
 }
 
 function buildOwnedCard(instance, onSelect) {
