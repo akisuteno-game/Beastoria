@@ -4,12 +4,13 @@
    ============================================================ */
 
 import { STARTERS, createMonsterInstance } from './data/monsters.js';
-import { SAMPLE_ENEMY_GROUP } from './data/enemies.js';
+import { FOREST_MAP } from './data/mapNodes.js';
 import { ScreenManager } from './systems/screens.js';
 import { Party } from './systems/party.js';
 import { Roster } from './systems/roster.js';
 import { Battle } from './systems/battle.js';
 import { Inventory } from './systems/inventory.js';
+import { ExplorationState } from './systems/exploration.js';
 import { evolveMonster } from './systems/evolution.js';
 import { transformMonster } from './systems/transformation.js';
 import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
@@ -19,11 +20,13 @@ import { renderPartyLanes } from './ui/partyRender.js';
 import { renderBattle } from './ui/battleRender.js';
 import { renderMonsterDetail } from './ui/monsterDetailRender.js';
 import { renderRoster } from './ui/rosterRender.js';
+import { renderMap } from './ui/mapRender.js';
 
 let selectedStarter = null;
 const party = new Party();
 const roster = new Roster();
 const inventory = new Inventory();
+const exploration = new ExplorationState(FOREST_MAP);
 
 let battle = null;
 let battleTimer = null;
@@ -87,6 +90,27 @@ function refreshDetailScreen() {
   });
 }
 
+function refreshMapScreen() {
+  renderMap(document.querySelector('#map-path'), exploration, (node) => {
+    if (node.type === 'treasure') {
+      claimTreasure(node);
+    } else {
+      startBattle(node);
+    }
+  });
+}
+
+function claimTreasure(node) {
+  if (node.reward.stones) {
+    inventory.addStones(node.reward.stones.attribute, node.reward.stones.amount);
+  }
+  if (node.reward.crystals) {
+    inventory.addCrystals(node.reward.crystals);
+  }
+  exploration.advance();
+  refreshMapScreen();
+}
+
 function refreshBattleScreen() {
   renderBattle(
     document.querySelector('#battle-ally-lane'),
@@ -104,6 +128,9 @@ function refreshBattleScreen() {
 function handleBattleEndIfNeeded() {
   if (battle.status === 'ongoing') return;
   stopBattleLoop();
+  if (battle.status === 'win') {
+    exploration.advance();
+  }
   document.querySelector('#battle-back-btn').style.display = '';
   document.querySelector('#battle-pause-btn').style.display = 'none';
 }
@@ -124,16 +151,16 @@ function stopBattleLoop() {
   }
 }
 
-function startBattle(screens) {
+function startBattle(node) {
   const allyUnits = party.members.map((member) => createAllyUnit(member));
-  const enemyUnits = SAMPLE_ENEMY_GROUP.map((data) => createEnemyUnit(data));
+  const enemyUnits = node.enemyGroup.map((data) => createEnemyUnit(data));
   battle = new Battle(allyUnits, enemyUnits);
 
   document.querySelector('#battle-back-btn').style.display = 'none';
   document.querySelector('#battle-pause-btn').style.display = '';
   document.querySelector('#battle-pause-btn').textContent = '一時停止';
 
-  screens.show('battle');
+  showScreenByName('battle');
   refreshBattleScreen();
   startBattleLoop();
 }
@@ -169,7 +196,13 @@ function init() {
 
   document.querySelector('#party-done-btn').addEventListener('click', () => {
     if (party.members.length === 0) return;
-    startBattle(screens);
+    refreshMapScreen();
+    screens.show('map');
+  });
+
+  document.querySelector('#map-party-btn').addEventListener('click', () => {
+    refreshPartyScreen();
+    screens.show('party');
   });
 
   document.querySelector('#roster-open-btn').addEventListener('click', () => {
@@ -201,7 +234,8 @@ function init() {
   });
 
   document.querySelector('#battle-back-btn').addEventListener('click', () => {
-    screens.show('party');
+    refreshMapScreen();
+    screens.show('map');
   });
 }
 
