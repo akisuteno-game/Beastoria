@@ -1,94 +1,24 @@
-function startBattle(beast){
+/* ============================================================
+   screens.js
+   画面遷移(スクリーンマネージャー)
 
+   #game-root 直下の .screen 要素を data-screen 属性で切り替える、
+   ごく小さな状態管理。本格的なシーン管理(戦闘・探索の遷移含む)は
+   今後のフェーズで拡張する。
+   ============================================================ */
 
-currentEnemy={...beast};
+export class ScreenManager {
+  constructor(rootSelector = '#game-root') {
+    this.root = document.querySelector(rootSelector);
+    this.screens = new Map();
+    this.root.querySelectorAll('.screen').forEach((el) => {
+      this.screens.set(el.dataset.screen, el);
+    });
+  }
 
-
-document
-.getElementById("beastList")
-.hidden=true;
-
-
-document
-.getElementById("battleArea")
-.hidden=false;
-
-
-
-document
-.getElementById("enemyImg")
-.src=currentEnemy.img;
-
-
-document
-.getElementById("enemyName")
-.textContent=currentEnemy.name;
-
-
-renderEnemy();
-
-
-
+  show(name) {
+    this.screens.forEach((el, key) => {
+      el.classList.toggle('is-active', key === name);
+    });
+  }
 }
-
-
-
-function renderEnemy(){
-
-
-document
-.getElementById("enemyHP")
-.textContent=
-currentEnemy.hp;
-
-
-
-}
-
-
-
-document
-.getElementById("attackButton")
-.onclick=()=>{
-
-
-currentEnemy.hp -= player.atk;
-
-
-if(currentEnemy.hp<=0){
-
-
-alert(
-currentEnemy.name+"を倒した！"
-);
-
-
-return;
-
-
-}
-
-
-
-player.hp -= currentEnemy.atk;
-
-
-
-if(player.hp<=0){
-
-alert("敗北…");
-
-
-player.hp=player.maxHP;
-
-
-}
-
-
-
-renderEnemy();
-
-renderPlayer();
-
-
-};
