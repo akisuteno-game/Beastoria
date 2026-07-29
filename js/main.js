@@ -4,14 +4,22 @@
    ============================================================ */
 
 import { STARTERS, createMonsterInstance } from './data/monsters.js';
+import { SAMPLE_ENEMY_GROUP } from './data/enemies.js';
 import { ScreenManager } from './systems/screens.js';
 import { Party } from './systems/party.js';
+import { Battle } from './systems/battle.js';
+import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
 import { initViewportScale } from './systems/viewport.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
+import { renderBattle } from './ui/battleRender.js';
 
 let selectedStarter = null;
 const party = new Party();
+
+let battle = null;
+let battleTimer = null;
+const BATTLE_TICK_MS = 1200;
 
 function refreshPartyScreen() {
   renderPartyLanes(
@@ -29,6 +37,57 @@ function refreshPartyScreen() {
       },
     }
   );
+}
+
+function refreshBattleScreen() {
+  renderBattle(
+    document.querySelector('#battle-ally-lane'),
+    document.querySelector('#battle-enemy-lane'),
+    document.querySelector('#battle-log'),
+    battle,
+    (unitId) => {
+      battle.useSpecial(unitId);
+      refreshBattleScreen();
+      handleBattleEndIfNeeded();
+    }
+  );
+}
+
+function handleBattleEndIfNeeded() {
+  if (battle.status === 'ongoing') return;
+  stopBattleLoop();
+  document.querySelector('#battle-back-btn').style.display = '';
+  document.querySelector('#battle-pause-btn').style.display = 'none';
+}
+
+function startBattleLoop() {
+  stopBattleLoop();
+  battleTimer = setInterval(() => {
+    battle.advance();
+    refreshBattleScreen();
+    handleBattleEndIfNeeded();
+  }, BATTLE_TICK_MS);
+}
+
+function stopBattleLoop() {
+  if (battleTimer) {
+    clearInterval(battleTimer);
+    battleTimer = null;
+  }
+}
+
+function startBattle(screens) {
+  const allyUnits = party.members.map((member) => createAllyUnit(member));
+  const enemyUnits = SAMPLE_ENEMY_GROUP.map((data) => createEnemyUnit(data));
+  battle = new Battle(allyUnits, enemyUnits);
+
+  document.querySelector('#battle-back-btn').style.display = 'none';
+  document.querySelector('#battle-pause-btn').style.display = '';
+  document.querySelector('#battle-pause-btn').textContent = '一時停止';
+
+  screens.show('battle');
+  refreshBattleScreen();
+  startBattleLoop();
 }
 
 function init() {
@@ -52,7 +111,6 @@ function init() {
 
   confirmBtn.addEventListener('click', () => {
     if (!selectedStarter) return;
-    // スターターを所持モンスターとしてインスタンス化し、前衛にセットしてパーティ画面へ
     const instance = createMonsterInstance(selectedStarter);
     party.addMember(instance, 'front');
     refreshPartyScreen();
@@ -60,11 +118,22 @@ function init() {
   });
 
   document.querySelector('#party-done-btn').addEventListener('click', () => {
-    // TODO: 探索・バトル画面へ接続(次フェーズ)
-    console.log('確定したパーティ:', party.members);
-    alert(
-      `パーティを編成した！(前衛${party.frontRow.length}体 / 後衛${party.backRow.length}体)\nこの先の探索・バトル画面は次フェーズで実装します。`
-    );
+    if (party.members.length === 0) return;
+    startBattle(screens);
+  });
+
+  document.querySelector('#battle-pause-btn').addEventListener('click', (e) => {
+    if (battleTimer) {
+      stopBattleLoop();
+      e.target.textContent = '再開';
+    } else if (battle && battle.status === 'ongoing') {
+      startBattleLoop();
+      e.target.textContent = '一時停止';
+    }
+  });
+
+  document.querySelector('#battle-back-btn').addEventListener('click', () => {
+    screens.show('party');
   });
 }
 
