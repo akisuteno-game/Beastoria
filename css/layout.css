@@ -142,3 +142,29 @@
 .battle-log__line {
   padding: 2px 0;
 }
+
+/* 探索マップ */
+.map-path {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow-y: auto;
+  flex: 1;
+  padding: var(--space-2) 0;
+}
+
+.map-node {
+  width: 100%;
+  max-width: 260px;
+}
+
+.map-connector {
+  width: 2px;
+  height: 28px;
+  background: var(--color-line);
+}
+
+.map-connector--cleared {
+  background: var(--color-gold);
+}
