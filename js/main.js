@@ -7,19 +7,35 @@ import { STARTERS, createMonsterInstance } from './data/monsters.js';
 import { SAMPLE_ENEMY_GROUP } from './data/enemies.js';
 import { ScreenManager } from './systems/screens.js';
 import { Party } from './systems/party.js';
+import { Roster } from './systems/roster.js';
 import { Battle } from './systems/battle.js';
+import { Inventory } from './systems/inventory.js';
+import { evolveMonster } from './systems/evolution.js';
+import { transformMonster } from './systems/transformation.js';
 import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
 import { initViewportScale } from './systems/viewport.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
 import { renderBattle } from './ui/battleRender.js';
+import { renderMonsterDetail } from './ui/monsterDetailRender.js';
+import { renderRoster } from './ui/rosterRender.js';
 
 let selectedStarter = null;
 const party = new Party();
+const roster = new Roster();
+const inventory = new Inventory();
 
 let battle = null;
 let battleTimer = null;
 const BATTLE_TICK_MS = 1200;
+
+let detailInstanceId = null;
+let detailReturnScreen = 'party'; // 詳細画面から「戻る」時の戻り先
+
+let _screens = null;
+function showScreenByName(name) {
+  if (_screens) _screens.show(name);
+}
 
 function refreshPartyScreen() {
   renderPartyLanes(
@@ -35,8 +51,40 @@ function refreshPartyScreen() {
         party.removeMember(instanceId);
         refreshPartyScreen();
       },
+      onDetail: (instanceId) => {
+        detailInstanceId = instanceId;
+        detailReturnScreen = 'party';
+        refreshDetailScreen();
+        showScreenByName('monster-detail');
+      },
     }
   );
+}
+
+function refreshRosterScreen() {
+  renderRoster(document.querySelector('#roster-grid'), roster, STARTERS, (instanceId) => {
+    detailInstanceId = instanceId;
+    detailReturnScreen = 'roster';
+    refreshDetailScreen();
+    showScreenByName('monster-detail');
+  });
+}
+
+function refreshDetailScreen() {
+  const instance = roster.findById(detailInstanceId);
+  if (!instance) return;
+  renderMonsterDetail(document.querySelector('#monster-detail-body'), instance, inventory, {
+    onEvolve: (instanceId) => {
+      const target = roster.findById(instanceId);
+      if (target) evolveMonster(target, inventory);
+      refreshDetailScreen();
+    },
+    onTransform: (instanceId) => {
+      const target = roster.findById(instanceId);
+      if (target) transformMonster(target, inventory);
+      refreshDetailScreen();
+    },
+  });
 }
 
 function refreshBattleScreen() {
@@ -94,6 +142,7 @@ function init() {
   initViewportScale();
 
   const screens = new ScreenManager();
+  _screens = screens;
   screens.show('title');
 
   document.querySelector('#start-btn').addEventListener('click', () => {
@@ -112,6 +161,7 @@ function init() {
   confirmBtn.addEventListener('click', () => {
     if (!selectedStarter) return;
     const instance = createMonsterInstance(selectedStarter);
+    roster.addMonster(instance);
     party.addMember(instance, 'front');
     refreshPartyScreen();
     screens.show('party');
@@ -120,6 +170,24 @@ function init() {
   document.querySelector('#party-done-btn').addEventListener('click', () => {
     if (party.members.length === 0) return;
     startBattle(screens);
+  });
+
+  document.querySelector('#roster-open-btn').addEventListener('click', () => {
+    refreshRosterScreen();
+    screens.show('roster');
+  });
+
+  document.querySelector('#roster-back-btn').addEventListener('click', () => {
+    screens.show('party');
+  });
+
+  document.querySelector('#detail-back-btn').addEventListener('click', () => {
+    if (detailReturnScreen === 'roster') {
+      refreshRosterScreen();
+    } else {
+      refreshPartyScreen();
+    }
+    screens.show(detailReturnScreen);
   });
 
   document.querySelector('#battle-pause-btn').addEventListener('click', (e) => {
