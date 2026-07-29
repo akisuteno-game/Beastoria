@@ -104,8 +104,8 @@ function claimTreasure(node) {
   if (node.reward.stones) {
     inventory.addStones(node.reward.stones.attribute, node.reward.stones.amount);
   }
-  if (node.reward.crystals) {
-    inventory.addCrystals(node.reward.crystals);
+  if (node.reward.item) {
+    inventory.addItem(node.reward.item.itemId, node.reward.item.amount);
   }
   exploration.advance();
   refreshMapScreen();
