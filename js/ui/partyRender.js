@@ -7,7 +7,7 @@ import { ATTRIBUTES } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
 import { MAX_PARTY_SIZE } from '../systems/party.js';
 
-function buildMemberCard(monster, row, onToggleRow, onRemove) {
+function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
   const attr = ATTRIBUTES[monster.attribute];
   const card = document.createElement('div');
   card.className = 'party-slot party-slot--filled';
@@ -19,6 +19,7 @@ function buildMemberCard(monster, row, onToggleRow, onRemove) {
       <span class="attr-badge ${attr.badgeClass}">${attr.label}属性</span>
     </div>
     <div class="party-slot__controls">
+      <button class="btn btn--ghost btn--sm" data-action="detail">詳細</button>
       <button class="btn btn--ghost btn--sm" data-action="toggle">${row === 'front' ? '前衛→後衛' : '後衛→前衛'}</button>
       <button class="btn btn--ghost btn--sm" data-action="remove">外す</button>
     </div>
@@ -26,6 +27,7 @@ function buildMemberCard(monster, row, onToggleRow, onRemove) {
 
   renderPlaceholderSprite(card.querySelector('canvas'), attr.color);
 
+  card.querySelector('[data-action="detail"]').addEventListener('click', () => onDetail(monster.instanceId));
   card.querySelector('[data-action="toggle"]').addEventListener('click', () => onToggleRow(monster.instanceId));
   card.querySelector('[data-action="remove"]').addEventListener('click', () => onRemove(monster.instanceId));
 
@@ -45,13 +47,13 @@ export function renderPartyLanes(frontEl, backEl, party, handlers) {
 
   party.frontRow.forEach(({ monster }) => {
     frontEl.appendChild(
-      buildMemberCard(monster, 'front', handlers.onToggleRow, handlers.onRemove)
+      buildMemberCard(monster, 'front', handlers.onToggleRow, handlers.onRemove, handlers.onDetail)
     );
   });
 
   party.backRow.forEach(({ monster }) => {
     backEl.appendChild(
-      buildMemberCard(monster, 'back', handlers.onToggleRow, handlers.onRemove)
+      buildMemberCard(monster, 'back', handlers.onToggleRow, handlers.onRemove, handlers.onDetail)
     );
   });
 
