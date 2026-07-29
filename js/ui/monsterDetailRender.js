@@ -1,25 +1,27 @@
 /* ============================================================
    monsterDetailRender.js
    モンスター詳細画面の描画(進化・異姿化の操作を含む)
+
+   ※ 異姿化は「専用アイテムを実際に持っている場合」だけセクションを
+     表示する。持っていない段階で存在をほのめかすと、進化のように
+     見えて面白くなくなるため、UI上ではあえて何も出さない。
    ============================================================ */
 
 import { ATTRIBUTES, rarityToStars, ROLE_LABEL } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
-import { canEvolve, EVOLUTION_STONE_COST } from '../systems/evolution.js';
-import { canTransform, nextTransformationStep } from '../systems/transformation.js';
-import { getTransformationPath } from '../data/transformations.js';
+import { canEvolve, EVOLUTION_STONE_COST, MAX_EVOLUTION_STAGE } from '../systems/evolution.js';
+import { canTransform, hasTransformationItemReady } from '../systems/transformation.js';
 
 export function renderMonsterDetail(container, instance, inventory, handlers) {
   const attr = ATTRIBUTES[instance.attribute];
-  const path = getTransformationPath(instance.speciesId);
 
   const evolveOk = canEvolve(instance);
   const stoneCount = inventory.stones[instance.attribute] ?? 0;
   const stoneOk = stoneCount >= EVOLUTION_STONE_COST;
 
-  const transformOk = canTransform(instance);
-  const nextStep = nextTransformationStep(instance);
-  const crystalOk = nextStep ? inventory.crystals >= nextStep.crystalCost : false;
+  const alreadyTransformed = instance.transformationStage > 0;
+  const transformReady = !alreadyTransformed && hasTransformationItemReady(instance, inventory);
+  const showTransformSection = alreadyTransformed || transformReady;
 
   container.innerHTML = `
     <div class="panel panel--raised monster-detail__main">
@@ -38,26 +40,28 @@ export function renderMonsterDetail(container, instance, inventory, handlers) {
     </div>
 
     <div class="panel monster-detail__section">
-      <h3 class="section-title">進化 (${instance.evolutionStage} / 2)</h3>
+      <h3 class="section-title">進化 (${instance.evolutionStage} / ${MAX_EVOLUTION_STAGE})</h3>
       ${
         evolveOk
           ? `<p class="detail-note">${attr.label}属性石 ${EVOLUTION_STONE_COST}個が必要(所持: ${stoneCount}個)</p>
              <button id="evolve-btn" class="btn ${stoneOk ? '' : 'btn--ghost'}" ${stoneOk ? '' : 'disabled'}>進化させる</button>`
-          : `<p class="detail-note">${instance.evolutionStage >= 2 ? 'これ以上は進化しません' : '異姿化済みのため進化できません'}</p>`
+          : `<p class="detail-note">${instance.evolutionStage >= MAX_EVOLUTION_STAGE ? 'これ以上は進化しません' : '進化データがありません'}</p>`
       }
     </div>
 
-    <div class="panel monster-detail__section">
-      <h3 class="section-title">異姿化 (${instance.transformationStage} / ${path.length || '—'})</h3>
-      ${
-        path.length === 0
-          ? `<p class="detail-note">このモンスターの異姿化データは未設定です</p>`
-          : transformOk
-          ? `<p class="detail-note">次の姿「${nextStep.name}」には異姿結晶 ${nextStep.crystalCost}個が必要(所持: ${inventory.crystals}個)</p>
-             <button id="transform-btn" class="btn ${crystalOk ? '' : 'btn--ghost'}" ${crystalOk ? '' : 'disabled'}>異姿化させる</button>`
-          : `<p class="detail-note">${instance.evolutionStage !== 1 ? '進化した個体は異姿化できません' : '最終形態です'}</p>`
-      }
-    </div>
+    ${
+      showTransformSection
+        ? `<div class="panel monster-detail__section">
+             <h3 class="section-title">異姿化</h3>
+             ${
+               alreadyTransformed
+                 ? `<p class="detail-note">この個体はすでに異姿化しています。以後は異姿化後専用の進化ルートを歩みます。</p>`
+                 : `<p class="detail-note">専用のアイテムを使うと、姿が変わるようだ…</p>
+                    <button id="transform-btn" class="btn">アイテムを使う</button>`
+             }
+           </div>`
+        : ''
+    }
   `;
 
   renderPlaceholderSprite(container.querySelector('canvas'), attr.color);
