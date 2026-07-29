@@ -59,7 +59,26 @@
         </div>
 
         <div class="screen-footer">
-          <button id="party-done-btn" class="btn">編成を確定</button>
+          <button id="party-done-btn" class="btn">編成を確定してバトルへ</button>
+        </div>
+      </section>
+
+      <!-- バトル画面 -->
+      <section class="screen" data-screen="battle">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">バトル</h2>
+          <button id="battle-pause-btn" class="btn btn--ghost btn--sm">一時停止</button>
+        </div>
+
+        <div class="battle-arena">
+          <div id="battle-ally-lane" class="battle-lane"></div>
+          <div id="battle-enemy-lane" class="battle-lane battle-lane--enemy"></div>
+        </div>
+
+        <div id="battle-log" class="battle-log"></div>
+
+        <div class="screen-footer">
+          <button id="battle-back-btn" class="btn" style="display:none;">パーティ編成へ戻る</button>
         </div>
       </section>
 
