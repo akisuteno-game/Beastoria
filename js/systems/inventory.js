@@ -16,6 +16,10 @@ export class Inventory {
     return (this.stones[attribute] ?? 0) >= amount;
   }
 
+  addStones(attribute, amount) {
+    this.stones[attribute] = (this.stones[attribute] ?? 0) + amount;
+  }
+
   consumeStones(attribute, amount) {
     if (!this.hasStones(attribute, amount)) return false;
     this.stones[attribute] -= amount;
@@ -24,6 +28,10 @@ export class Inventory {
 
   hasCrystals(amount) {
     return this.crystals >= amount;
+  }
+
+  addCrystals(amount) {
+    this.crystals += amount;
   }
 
   consumeCrystals(amount) {
