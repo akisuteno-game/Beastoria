@@ -18,8 +18,11 @@ export function createMonsterInstance(species) {
     attribute: species.attribute,
     role: species.role,
     rarity: species.rarity,
+    baseStats: { ...species.baseStats },
     stats: { ...species.baseStats },
     evolutionStage: species.evolution.stage,
+    attributeLocked: false,
+    transformationStage: 0,
   };
 }
 
