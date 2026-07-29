@@ -2,39 +2,41 @@
    transformation.js
    異姿化システム
 
-   仕様: 基本形(進化段階1)からのみ発生しうる特殊変身。最大3段階。
-   進化済み(段階2)の個体は対象外とする。
+   仕様: 異姿化は基本形(進化段階1・未進化・未異姿化)からのみ、
+   専用アイテムを消費して一度だけ発生する。異姿化後は通常の
+   進化ルートではなく、別の進化ルート(evolutionsAlt.js)を歩む。
    ============================================================ */
 
-import { getTransformationPath } from '../data/transformations.js';
+import { getTransformationData } from '../data/transformations.js';
 import { scaleStats } from '../utils/statUtils.js';
 
+// 異姿化データが存在し、まだ基本形のままの個体にのみ許可する
 export function canTransform(instance) {
-  const path = getTransformationPath(instance.speciesId);
-  return instance.evolutionStage === 1 && instance.transformationStage < path.length;
+  if (instance.evolutionStage !== 1 || instance.transformationStage !== 0) return false;
+  return !!getTransformationData(instance.speciesId);
 }
 
-export function nextTransformationStep(instance) {
-  const path = getTransformationPath(instance.speciesId);
-  return path[instance.transformationStage] ?? null;
+// 「異姿化できる状態で、かつ専用アイテムを実際に持っている」場合のみtrue。
+// アイテムを持っていない場合はUI側で存在自体を出さないようにするための判定。
+export function hasTransformationItemReady(instance, inventory) {
+  if (!canTransform(instance)) return false;
+  const data = getTransformationData(instance.speciesId);
+  return inventory.hasItem(data.requiredItemId, 1);
 }
 
 export function transformMonster(instance, inventory) {
   if (!canTransform(instance)) {
     return { success: false, reason: 'transform-not-available' };
   }
-  const step = nextTransformationStep(instance);
-  if (!step) {
-    return { success: false, reason: 'no-more-stages' };
-  }
-  if (!inventory.hasCrystals(step.crystalCost)) {
-    return { success: false, reason: 'not-enough-crystals' };
+  const data = getTransformationData(instance.speciesId);
+  if (!inventory.hasItem(data.requiredItemId, 1)) {
+    return { success: false, reason: 'missing-item' };
   }
 
-  inventory.consumeCrystals(step.crystalCost);
-  instance.transformationStage += 1;
-  instance.name = step.name;
-  instance.stats = scaleStats(instance.baseStats, step.statGrowth);
+  inventory.consumeItem(data.requiredItemId, 1);
+  instance.transformationStage = 1;
+  instance.name = data.name;
+  instance.stats = scaleStats(instance.baseStats, data.statGrowth);
 
   return { success: true };
 }
