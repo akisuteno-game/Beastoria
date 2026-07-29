@@ -1,0 +1,184 @@
+/* ============================================================
+   components.css
+   共通UIパーツ
+   シグネチャー要素: 「額縁ウィンドウ」— 四隅を斜めに切り欠いた
+   ドット絵RPG風のパネル。ビーストリア全体でこの形状を統一使用する。
+   ============================================================ */
+
+.panel {
+  --n: var(--notch);
+  background: var(--color-panel);
+  border: 2px solid var(--color-line);
+  clip-path: polygon(
+    var(--n) 0, calc(100% - var(--n)) 0,
+    100% var(--n), 100% calc(100% - var(--n)),
+    calc(100% - var(--n)) 100%, var(--n) 100%,
+    0 calc(100% - var(--n)), 0 var(--n)
+  );
+  padding: var(--space-3);
+}
+
+.panel--raised {
+  background: var(--color-panel-raised);
+  border-color: var(--color-line-bright);
+}
+
+/* ロゴ */
+.logo {
+  font-size: var(--fs-xxl);
+  color: var(--color-gold-bright);
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--color-void);
+}
+
+.logo__sub {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--color-parchment-dim);
+  letter-spacing: 0.3em;
+  margin-top: var(--space-2);
+}
+
+/* ボタン(額縁ボタン) */
+.btn {
+  --n: 6px;
+  background: var(--color-gold);
+  color: var(--color-void);
+  border: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: bold;
+  padding: var(--space-2) var(--space-5);
+  clip-path: polygon(
+    var(--n) 0, calc(100% - var(--n)) 0,
+    100% var(--n), 100% calc(100% - var(--n)),
+    calc(100% - var(--n)) 100%, var(--n) 100%,
+    0 calc(100% - var(--n)), 0 var(--n)
+  );
+  transition: transform 0.1s var(--ease-pixel), background 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--color-gold-bright);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  background: var(--color-line);
+  color: var(--color-parchment-dim);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-parchment-dim);
+  border: 2px solid var(--color-line);
+}
+
+.btn--ghost:hover {
+  background: var(--color-panel-raised);
+  color: var(--color-parchment);
+}
+
+/* レア度: ★/✦ 表記 */
+.rarity {
+  font-family: var(--font-mono);
+  color: var(--color-gold);
+  font-size: var(--fs-sm);
+  letter-spacing: 1px;
+}
+
+/* 属性バッジ */
+.attr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  padding: 2px var(--space-2);
+  border-radius: 2px;
+  color: var(--color-void);
+  font-weight: bold;
+}
+
+.attr-badge--fire   { background: var(--color-fire); }
+.attr-badge--water  { background: var(--color-water); }
+.attr-badge--forest { background: var(--color-forest); }
+
+/* パーティ編成スロット */
+.party-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.party-slot--empty {
+  justify-content: center;
+  align-items: center;
+  min-height: 110px;
+  border-style: dashed;
+}
+
+.party-slot__placeholder {
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+}
+
+.party-slot__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.btn--sm {
+  font-size: var(--fs-xs);
+  padding: 4px var(--space-2);
+}
+
+/* モンスターカード */
+.monster-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-pixel);
+}
+
+.monster-card:hover,
+.monster-card.is-selected {
+  transform: translateY(-4px);
+}
+
+.monster-card.is-selected .panel {
+  border-color: var(--color-gold-bright);
+  box-shadow: 0 0 0 2px var(--color-gold-bright) inset;
+}
+
+.monster-card__sprite {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  display: block;
+  margin: 0 auto var(--space-2);
+}
+
+.monster-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+}
+
+.monster-card__type {
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+}
