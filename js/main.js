@@ -6,6 +6,7 @@
 import { STARTERS, createMonsterInstance } from './data/monsters.js';
 import { ScreenManager } from './systems/screens.js';
 import { Party } from './systems/party.js';
+import { initViewportScale } from './systems/viewport.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
 
@@ -31,6 +32,8 @@ function refreshPartyScreen() {
 }
 
 function init() {
+  initViewportScale();
+
   const screens = new ScreenManager();
   screens.show('title');
 
