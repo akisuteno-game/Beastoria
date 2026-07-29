@@ -12,54 +12,60 @@
 </head>
 <body>
 
-<div id="game-root">
+<div id="viewport-stage">
+  <div id="viewport-frame">
 
-  <!-- タイトル画面 -->
-  <section class="screen" data-screen="title" style="justify-content:center; align-items:center;">
-    <h1 class="logo">ビーストリア
-      <span class="logo__sub">BEASTORIA</span>
-    </h1>
-    <div style="margin-top: var(--space-5);">
-      <button id="start-btn" class="btn">はじめる</button>
+    <div id="game-root">
+
+      <!-- タイトル画面 -->
+      <section class="screen" data-screen="title" style="justify-content:center; align-items:center;">
+        <h1 class="logo">ビーストリア
+          <span class="logo__sub">BEASTORIA</span>
+        </h1>
+        <div style="margin-top: var(--space-5);">
+          <button id="start-btn" class="btn">はじめる</button>
+        </div>
+      </section>
+
+      <!-- ホーム画面(スターター選択) -->
+      <section class="screen" data-screen="home">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">最初の仲間を選ぼう</h2>
+          <span class="top-bar__label">STEP 1 / 1</span>
+        </div>
+
+        <div id="starter-grid" class="starter-grid"></div>
+
+        <div class="screen-footer">
+          <button id="confirm-starter-btn" class="btn" disabled>モンスターを選択してください</button>
+        </div>
+      </section>
+
+      <!-- パーティ編成画面 -->
+      <section class="screen" data-screen="party">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
+          <span class="top-bar__label">MAX 4</span>
+        </div>
+
+        <div class="party-lane">
+          <span class="party-lane__label">前衛 FRONT</span>
+          <div id="party-front" class="party-lane__row"></div>
+        </div>
+
+        <div class="party-lane">
+          <span class="party-lane__label">後衛 BACK / 空き枠</span>
+          <div id="party-back" class="party-lane__row"></div>
+        </div>
+
+        <div class="screen-footer">
+          <button id="party-done-btn" class="btn">編成を確定</button>
+        </div>
+      </section>
+
     </div>
-  </section>
 
-  <!-- ホーム画面(スターター選択) -->
-  <section class="screen" data-screen="home">
-    <div class="top-bar">
-      <h2 style="font-size: var(--fs-lg);">最初の仲間を選ぼう</h2>
-      <span class="top-bar__label">STEP 1 / 1</span>
-    </div>
-
-    <div id="starter-grid" class="starter-grid"></div>
-
-    <div class="screen-footer">
-      <button id="confirm-starter-btn" class="btn" disabled>モンスターを選択してください</button>
-    </div>
-  </section>
-
-  <!-- パーティ編成画面 -->
-  <section class="screen" data-screen="party">
-    <div class="top-bar">
-      <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
-      <span class="top-bar__label">MAX 4</span>
-    </div>
-
-    <div class="party-lane">
-      <span class="party-lane__label">前衛 FRONT</span>
-      <div id="party-front" class="party-lane__row"></div>
-    </div>
-
-    <div class="party-lane">
-      <span class="party-lane__label">後衛 BACK / 空き枠</span>
-      <div id="party-back" class="party-lane__row"></div>
-    </div>
-
-    <div class="screen-footer">
-      <button id="party-done-btn" class="btn">編成を確定</button>
-    </div>
-  </section>
-
+  </div>
 </div>
 
 <script type="module" src="js/main.js"></script>
