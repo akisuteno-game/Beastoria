@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beastoria</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:#151515;
+  color:white;
+  font-family:sans-serif;
+  text-align:center;
+}
+
+.container{
+  max-width:600px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  font-size:42px;
+  color:#ffd54f;
+  margin-top:50px;
+}
+
+button{
+  width:80%;
+  max-width:300px;
+  padding:15px;
+  margin:10px;
+  font-size:18px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  background:#444;
+  color:white;
+}
+
+button:hover{
+  background:#666;
+}
+
+
+.card{
+  background:#222;
+  border:2px solid #555;
+  border-radius:15px;
+  padding:15px;
+  margin:10px;
+}
+
+
+.monster{
+  font-size:60px;
+}
+
+
+.menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+
+.hidden{
+  display:none;
+}
+
+
+.info{
+  background:#202020;
+  padding:15px;
+  border-radius:10px;
+  text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+<!-- タイトル -->
+<div id="title">
+
+<h1>🐾 Beastoria</h1>
+
+<p>
+モンスターと絆を結び<br>
+未知の世界を冒険しよう
+</p>
+
+
+<button onclick="startGame()">
+はじめから
+</button>
+
+<button onclick="loadGame()">
+続きから
+</button>
+
+
+</div>
+
+
+
+<!-- 初期選択 -->
+<div id="select" class="hidden">
+
+<h2>最初の卵を選択</h2>
+
+
+<div class="card">
+
+<div class="monster">🔥</div>
+
+<h3>ファングル</h3>
+
+<p>
+炎牙獣<br>
+攻撃型
+</p>
+
+<button onclick="choose('ファングル','🔥','炎')">
+この卵を選ぶ
+</button>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="monster">💧</div>
+
+<h3>ミズモル</h3>
+
+<p>
+水流獣<br>
+耐久・回復型
+</p>
+
+<button onclick="choose('ミズモル','💧','水')">
+この卵を選ぶ
+</button>
+
+</div>
+
+
+
+<div class="card">
+
+<div class="monster">🌿</div>
+
+<h3>リーフィ</h3>
+
+<p>
+森葉妖獣<br>
+支援型
+</p>
+
+<button onclick="choose('リーフィ','🌿','森')">
+この卵を選ぶ
+</button>
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- ホーム -->
+
+<div id="home" class="hidden">
+
+
+<h2>🏠 テイマー基地</h2>
+
+
+<div class="info">
+
+<p>
+プレイヤーLv：<span id="level"></span>
+</p>
+
+<p>
+💰 ゴールド：<span id="gold"></span>
+</p>
+
+
+<p>
+相棒：
+<span id="partner"></span>
+
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<div id="icon" class="monster"></div>
+
+<h3 id="monsterName"></h3>
+
+<p>
+属性：
+<span id="attribute"></span>
+</p>
+
+<p>
+Lv1
+</p>
+
+<p>
+獣魂技：
+準備中
+</p>
+
+
+</div>
+
+
+
+
+<div class="menu">
+
+<button onclick="openPage('編成')">
+🐾 編成
+</button>
+
+<button onclick="openPage('卵')">
+🥚 卵
+</button>
+
+<button onclick="openPage('育成')">
+🧬 育成
+</button>
+
+<button onclick="openPage('図鑑')">
+📖 図鑑
+</button>
+
+</div>
+
+
+</div>
+
+
+
+<!-- 仮ページ -->
+
+<div id="page" class="hidden">
+
+<h2 id="pageTitle"></h2>
+
+<p>
+この機能は開発中です。
+</p>
+
+<button onclick="backHome()">
+戻る
+</button>
+
+</div>
+
+
+
+</div>
+
+
+
+<script>
+
+
+let player={};
+
+
+function startGame(){
+
+document.getElementById("title").classList.add("hidden");
+
+document.getElementById("select").classList.remove("hidden");
+
+}
+
+
+
+function choose(name,icon,attribute){
+
+player={
+ level:1,
+ gold:1000,
+ monster:name,
+ icon:icon,
+ attribute:attribute
+};
+
+
+saveGame();
+
+showHome();
+
+}
+
+
+
+function showHome(){
+
+document.getElementById("select").classList.add("hidden");
+
+document.getElementById("home").classList.remove("hidden");
+
+
+document.getElementById("level").innerHTML=player.level;
+
+document.getElementById("gold").innerHTML=player.gold;
+
+document.getElementById("partner").innerHTML=
+player.monster;
+
+
+document.getElementById("icon").innerHTML=
+player.icon;
+
+
+document.getElementById("monsterName").innerHTML=
+player.monster;
+
+
+document.getElementById("attribute").innerHTML=
+player.attribute;
+
+
+}
+
+
+
+function saveGame(){
+
+localStorage.setItem(
+"BeastoriaSave",
+JSON.stringify(player)
+);
+
+}
+
+
+
+function loadGame(){
+
+let data=localStorage.getItem("BeastoriaSave");
+
+
+if(data){
+
+player=JSON.parse(data);
+
+showHome();
+
+}else{
+
+alert("セーブデータがありません");
+
+}
+
+
+}
+
+
+
+function openPage(name){
+
+document.getElementById("home")
+.classList.add("hidden");
+
+
+document.getElementById("page")
+.classList.remove("hidden");
+
+
+document.getElementById("pageTitle")
+.innerHTML=name;
+
+
+}
+
+
+
+function backHome(){
+
+document.getElementById("page")
+.classList.add("hidden");
+
+
+document.getElementById("home")
+.classList.remove("hidden");
+
+}
+
+
+
+</script>
+
+
+</body>
+</html>
