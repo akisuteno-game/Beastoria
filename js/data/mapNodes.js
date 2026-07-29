@@ -12,7 +12,7 @@ export const FOREST_MAP = [
   { id: 'n1', type: 'battle', label: '森の入口', enemyGroup: FOREST_PATH_GROUP },
   { id: 'n2', type: 'treasure', label: '古い宝箱', reward: { stones: { attribute: 'forest', amount: 5 } } },
   { id: 'n3', type: 'battle', label: '渓流のほとり', enemyGroup: RIVERSIDE_GROUP },
-  { id: 'n4', type: 'treasure', label: '苔むした祠', reward: { crystals: 2 } },
+  { id: 'n4', type: 'treasure', label: '苔むした祠', reward: { item: { itemId: 'ember-shard', amount: 1 } } },
   { id: 'n5', type: 'boss', label: '遺跡の番人', enemyGroup: RUIN_BOSS_GROUP },
 ];
 
