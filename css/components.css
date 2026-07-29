@@ -144,6 +144,67 @@
   padding: 4px var(--space-2);
 }
 
+/* バトルユニットカード */
+.unit-card {
+  width: 100%;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.unit-card--down {
+  opacity: 0.4;
+}
+
+.unit-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unit-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+}
+
+.unit-card__ko {
+  font-size: var(--fs-xs);
+  color: var(--color-fire);
+}
+
+.bar {
+  height: 8px;
+  background: var(--color-void);
+  border: 1px solid var(--color-line);
+}
+
+.bar__fill {
+  height: 100%;
+  background: var(--color-forest);
+  transition: width 0.2s ease;
+}
+
+.bar--gauge .bar__fill {
+  background: var(--color-gold);
+}
+
+.bar__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--color-parchment-dim);
+}
+
+.btn--special {
+  background: var(--color-gold-bright);
+  animation: pulse-glow 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(246, 198, 90, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(246, 198, 90, 0); }
+}
+
 /* モンスターカード */
 .monster-card {
   display: flex;
