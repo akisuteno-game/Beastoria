@@ -45,7 +45,7 @@
       <section class="screen" data-screen="party">
         <div class="top-bar">
           <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
-          <span class="top-bar__label">MAX 4</span>
+          <button id="roster-open-btn" class="btn btn--ghost btn--sm">図鑑</button>
         </div>
 
         <div class="party-lane">
@@ -61,6 +61,26 @@
         <div class="screen-footer">
           <button id="party-done-btn" class="btn">編成を確定してバトルへ</button>
         </div>
+      </section>
+
+      <!-- 所持モンスター一覧・図鑑画面 -->
+      <section class="screen" data-screen="roster">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">図鑑</h2>
+          <button id="roster-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="roster-grid" class="starter-grid" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- モンスター詳細画面(進化・異姿化) -->
+      <section class="screen" data-screen="monster-detail">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">モンスター詳細</h2>
+          <button id="detail-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="monster-detail-body" style="overflow-y: auto;"></div>
       </section>
 
       <!-- バトル画面 -->
