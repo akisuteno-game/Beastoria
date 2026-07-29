@@ -1,360 +1,92 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-    <title>FirstRPG</title>
+<title>BEASTRIA</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css">
+
 </head>
 
-
 <body>
+
+<h1>🦁 BEASTRIA</h1>
+
 
 <div id="game">
 
 
-    <!-- =====================
-        プレイヤーステータス
-    ====================== -->
-    <aside id="playerPanel">
+<!-- プレイヤー情報 -->
+<section id="status">
 
-        <h2>⚔️ プレイヤー</h2>
+<h2>プレイヤー</h2>
 
+<p>HP:
+<span id="playerHP"></span>
+</p>
 
-        <div class="statusBox">
+<p>攻撃:
+<span id="playerATK"></span>
+</p>
 
-            <p>
-                ❤️ HP
-                <span id="playerHP">
-                    100
-                </span>
-            </p>
+<p>属性:
+<span id="playerType"></span>
+</p>
 
+</section>
 
-            <p>
-                ⚔️ ATK
-                <span id="playerATK">
-                    10
-                </span>
-            </p>
 
 
-            <p>
-                💰 GOLD
-                <span id="playerGold">
-                    0
-                </span>
-            </p>
+<!-- メイン画面 -->
 
-        </div>
+<section id="main">
 
+<h2 id="title">
+ビースト選択
+</h2>
 
 
-        <h3>素材</h3>
+<div id="beastList"></div>
 
 
-        <div id="materialList">
+<div id="battleArea" hidden>
 
-            <div class="material">
-                🟢
-                <span>
-                    スライムゼリー
-                </span>
+<h2>⚔️ バトル</h2>
 
-                <b id="slimeMaterial">
-                    0
-                </b>
-            </div>
 
+<img id="enemyImg">
 
-            <div class="material">
-                🦷
-                <span>
-                    ゴブリンの牙
-                </span>
 
-                <b id="goblinMaterial">
-                    0
-                </b>
-            </div>
+<h3 id="enemyName"></h3>
 
 
-            <div class="material">
-                🔥
-                <span>
-                    竜の鱗
-                </span>
+<p>
+敵HP
+<span id="enemyHP"></span>
+</p>
 
-                <b id="dragonMaterial">
-                    0
-                </b>
-            </div>
 
-
-        </div>
-
-
-    </aside>
-
-
-
-
-
-    <!-- =====================
-        メイン画面
-    ====================== -->
-    <main id="mainPanel">
-
-
-        <!-- タブ -->
-        <nav id="tabs">
-
-
-            <button 
-            class="tabButton active"
-            data-tab="enemy">
-                🐉 敵選択
-            </button>
-
-
-            <button
-            class="tabButton"
-            data-tab="upgrade">
-                🔨 強化
-            </button>
-
-
-            <button
-            class="tabButton"
-            data-tab="setting">
-                ⚙️ 設定
-            </button>
-
-
-        </nav>
-
-
-
-
-
-        <!-- コンテンツ表示 -->
-        <section id="content">
-
-
-            <!-- 敵選択 -->
-            <div id="enemyTab"
-            class="tabContent">
-
-
-                <h2>
-                    敵を選択
-                </h2>
-
-
-                <div id="enemyList">
-
-                    <!-- JSで生成 -->
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-            <!-- 強化 -->
-            <div id="upgradeTab"
-            class="tabContent hidden">
-
-
-                <h2>
-                    強化
-                </h2>
-
-
-                <button id="attackUpgrade">
-
-                    ⚔️ ATK強化
-
-                </button>
-
-
-            </div>
-
-
-
-
-
-            <!-- 設定 -->
-            <div id="settingTab"
-            class="tabContent hidden">
-
-
-                <h2>
-                    設定
-                </h2>
-
-
-                <button id="saveButton">
-                    💾 セーブ
-                </button>
-
-
-                <button id="loadButton">
-                    📂 ロード
-                </button>
-
-
-                <button id="resetButton">
-                    🔄 リセット
-                </button>
-
-
-            </div>
-
-
-
-        </section>
-
-
-
-
-
-        <!-- =====================
-             バトル画面
-        ====================== -->
-
-        <section id="battleArea"
-        class="hidden">
-
-
-            <h2>
-                ⚔️ バトル
-            </h2>
-
-
-
-            <div id="enemyBattle">
-
-
-                <img id="enemyImage"
-                src=""
-                alt="enemy">
-
-
-                <h3 id="enemyName">
-                    敵
-                </h3>
-
-
-
-                <div class="hpBar">
-
-                    <div id="enemyHPBar">
-
-                    </div>
-
-                </div>
-
-
-                <p>
-                    HP:
-                    <span id="enemyHP">
-                        0
-                    </span>
-                </p>
-
-
-            </div>
-
-
-
-
-
-            <div id="gaugeArea">
-
-
-                <div class="gaugeBox">
-
-                    プレイヤー
-
-                    <div class="gauge">
-
-                        <div id="playerGauge">
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-
-                <div class="gaugeBox">
-
-                    敵
-
-                    <div class="gauge">
-
-                        <div id="enemyGauge">
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-            <button id="attackButton"
-            disabled>
-
-                ⚔️ 攻撃
-
-            </button>
-
-
-
-            <p id="battleMessage">
-
-            </p>
-
-
-
-        </section>
-
-
-
-    </main>
-
+<button id="attackButton">
+攻撃
+</button>
 
 
 </div>
 
 
+</section>
 
 
+</div>
 
-<!-- JavaScript -->
 
 <script src="js/data.js"></script>
 <script src="js/player.js"></script>
-<script src="js/save.js"></script>
 <script src="js/battle.js"></script>
 <script src="js/main.js"></script>
 
 
 </body>
-
 </html>
