@@ -1,15 +1,17 @@
 /* ============================================================
    inventory.js
-   所持アイテム管理(属性石・異姿結晶)
+   所持アイテム管理(属性石・専用アイテム)
 
-   ※ 入手手段(探索・報酬など)は未実装のため、動作検証用に
-     初期所持数を多めに設定している。
+   ※ 属性石は入手手段(探索・報酬など)が未実装のため、動作検証用に
+     初期所持数を多めに設定している。専用アイテム(異姿化用など)は
+     「特定のアイテムを使わないと異姿化できない」仕様に沿い、
+     初期所持は0個とし、探索の報酬などを通じて入手する形にする。
    ============================================================ */
 
 export class Inventory {
   constructor() {
     this.stones = { fire: 20, water: 20, forest: 20 };
-    this.crystals = 10; // 異姿結晶(仮アイテム、属性を問わず共通)
+    this.items = {}; // itemId -> 所持数
   }
 
   hasStones(attribute, amount) {
@@ -26,17 +28,17 @@ export class Inventory {
     return true;
   }
 
-  hasCrystals(amount) {
-    return this.crystals >= amount;
+  hasItem(itemId, amount = 1) {
+    return (this.items[itemId] ?? 0) >= amount;
   }
 
-  addCrystals(amount) {
-    this.crystals += amount;
+  addItem(itemId, amount = 1) {
+    this.items[itemId] = (this.items[itemId] ?? 0) + amount;
   }
 
-  consumeCrystals(amount) {
-    if (!this.hasCrystals(amount)) return false;
-    this.crystals -= amount;
+  consumeItem(itemId, amount = 1) {
+    if (!this.hasItem(itemId, amount)) return false;
+    this.items[itemId] -= amount;
     return true;
   }
 }
