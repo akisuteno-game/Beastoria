@@ -128,6 +128,9 @@ function claimTreasure(node) {
   if (node.reward.item) {
     inventory.addItem(node.reward.item.itemId, node.reward.item.amount);
   }
+  if (node.reward.items) {
+    node.reward.items.forEach((it) => inventory.addItem(it.itemId, it.amount));
+  }
   exploration.clearNode(node.id);
   refreshMapScreen();
 }
