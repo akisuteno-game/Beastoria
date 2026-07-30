@@ -10,7 +10,7 @@
 
 import { getNextEvolutionData } from '../data/evolutions.js';
 import { getNextAltEvolutionData } from '../data/evolutionsAlt.js';
-import { scaleStats } from '../utils/statUtils.js';
+import { recomputeStats } from './leveling.js';
 
 export const EVOLUTION_STONE_COST = 20;
 export const MAX_EVOLUTION_STAGE = 3;
@@ -41,7 +41,8 @@ export function evolveMonster(instance, inventory) {
   instance.evolutionStage = evo.stage;
   instance.name = evo.name;
   instance.attributeLocked = true;
-  instance.stats = scaleStats(instance.baseStats, evo.statGrowth);
+  instance.formGrowth = evo.statGrowth;
+  recomputeStats(instance);
 
   return { success: true };
 }
