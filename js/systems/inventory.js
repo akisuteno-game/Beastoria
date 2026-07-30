@@ -12,6 +12,21 @@ export class Inventory {
   constructor() {
     this.stones = { fire: 20, water: 20, forest: 20 };
     this.items = {}; // itemId -> 所持数
+    this.gold = 50; // 検証用の初期所持金(仮)
+  }
+
+  hasGold(amount) {
+    return this.gold >= amount;
+  }
+
+  addGold(amount) {
+    this.gold += amount;
+  }
+
+  spendGold(amount) {
+    if (!this.hasGold(amount)) return false;
+    this.gold -= amount;
+    return true;
   }
 
   hasStones(attribute, amount) {
