@@ -13,10 +13,12 @@ import { Inventory } from './systems/inventory.js';
 import { ExplorationState } from './systems/exploration.js';
 import { evolveMonster } from './systems/evolution.js';
 import { transformMonster } from './systems/transformation.js';
+import { addExperience } from './systems/leveling.js';
 import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
 import { initViewportScale } from './systems/viewport.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
+import { renderPartyAddList } from './ui/partyAddRender.js';
 import { renderBattle } from './ui/battleRender.js';
 import { renderMonsterDetail } from './ui/monsterDetailRender.js';
 import { renderRoster } from './ui/rosterRender.js';
@@ -30,6 +32,7 @@ const exploration = new ExplorationState(FOREST_MAP);
 
 let battle = null;
 let battleTimer = null;
+let currentBattleNode = null;
 const BATTLE_TICK_MS = 1200;
 
 let detailInstanceId = null;
@@ -60,8 +63,26 @@ function refreshPartyScreen() {
         refreshDetailScreen();
         showScreenByName('monster-detail');
       },
+      onAdd: () => {
+        refreshPartyAddScreen();
+        showScreenByName('party-add');
+      },
     }
   );
+}
+
+function refreshPartyAddScreen() {
+  const inPartyIds = new Set(party.members.map((m) => m.monster.instanceId));
+  const available = roster.list.filter((m) => !inPartyIds.has(m.instanceId));
+
+  renderPartyAddList(document.querySelector('#party-add-grid'), available, (instanceId) => {
+    const monster = roster.findById(instanceId);
+    if (monster && !party.isFull()) {
+      party.addMember(monster, 'back');
+    }
+    refreshPartyScreen();
+    showScreenByName('party');
+  });
 }
 
 function refreshRosterScreen() {
@@ -107,7 +128,7 @@ function claimTreasure(node) {
   if (node.reward.item) {
     inventory.addItem(node.reward.item.itemId, node.reward.item.amount);
   }
-  exploration.advance();
+  exploration.clearNode(node.id);
   refreshMapScreen();
 }
 
@@ -128,9 +149,15 @@ function refreshBattleScreen() {
 function handleBattleEndIfNeeded() {
   if (battle.status === 'ongoing') return;
   stopBattleLoop();
+
   if (battle.status === 'win') {
-    exploration.advance();
+    if (currentBattleNode) {
+      const xpReward = currentBattleNode.xpReward ?? 0;
+      party.members.forEach((member) => addExperience(member.monster, xpReward));
+      exploration.clearNode(currentBattleNode.id);
+    }
   }
+
   document.querySelector('#battle-back-btn').style.display = '';
   document.querySelector('#battle-pause-btn').style.display = 'none';
 }
@@ -152,6 +179,7 @@ function stopBattleLoop() {
 }
 
 function startBattle(node) {
+  currentBattleNode = node;
   const allyUnits = party.members.map((member) => createAllyUnit(member));
   const enemyUnits = node.enemyGroup.map((data) => createEnemyUnit(data));
   battle = new Battle(allyUnits, enemyUnits);
@@ -198,6 +226,11 @@ function init() {
     if (party.members.length === 0) return;
     refreshMapScreen();
     screens.show('map');
+  });
+
+  document.querySelector('#party-add-back-btn').addEventListener('click', () => {
+    refreshPartyScreen();
+    screens.show('party');
   });
 
   document.querySelector('#map-party-btn').addEventListener('click', () => {
