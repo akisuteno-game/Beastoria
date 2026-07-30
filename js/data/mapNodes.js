@@ -23,17 +23,17 @@ export const FOREST_MAP = {
   nodes: {
     n1: {
       id: 'n1', type: 'battle', label: '森の入口',
-      enemyGroup: FOREST_PATH_GROUP, xpReward: 20,
+      enemyGroup: FOREST_PATH_GROUP, xpReward: 20, goldReward: 15,
       next: ['n2a', 'n2b'],
     },
     n2a: {
       id: 'n2a', type: 'treasure', label: '近道の宝箱',
-      reward: { stones: { attribute: 'forest', amount: 5 } },
+      reward: { stones: { attribute: 'forest', amount: 5 }, gold: 10 },
       next: ['n3'],
     },
     n2b: {
       id: 'n2b', type: 'battle', label: '渓流のほとり(遠回り)',
-      enemyGroup: RIVERSIDE_GROUP, xpReward: 35,
+      enemyGroup: RIVERSIDE_GROUP, xpReward: 35, goldReward: 25,
       next: ['n3'],
     },
     n3: {
@@ -49,12 +49,12 @@ export const FOREST_MAP = {
     },
     n4: {
       id: 'n4', type: 'battle', label: '古びた洞窟',
-      enemyGroup: CAVE_GROUP, xpReward: 40,
+      enemyGroup: CAVE_GROUP, xpReward: 40, goldReward: 30,
       next: ['n5'],
     },
     n5: {
       id: 'n5', type: 'boss', label: '遺跡の番人',
-      enemyGroup: RUIN_BOSS_GROUP, xpReward: 80,
+      enemyGroup: RUIN_BOSS_GROUP, xpReward: 80, goldReward: 60,
       next: [],
     },
   },
