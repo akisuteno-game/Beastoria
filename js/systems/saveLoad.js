@@ -27,6 +27,7 @@ export function saveGame({ roster, party, inventory, exploration }) {
       })),
       stones: inventory.stones,
       items: inventory.items,
+      gold: inventory.gold,
       exploration: {
         unlocked: [...exploration.unlocked],
         cleared: [...exploration.cleared],
