@@ -335,6 +335,31 @@
   color: var(--color-forest);
 }
 
+/* 商店 */
+.shop-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.shop-item__stock,
+.shop-item__price {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+}
+
+.shop-gold {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  text-align: center;
+  margin-bottom: var(--space-3);
+}
+
 /* モンスターカード */
 .monster-card {
   display: flex;
