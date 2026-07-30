@@ -46,7 +46,10 @@
       <section class="screen" data-screen="party">
         <div class="top-bar">
           <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
-          <button id="roster-open-btn" class="btn btn--ghost btn--sm">図鑑</button>
+          <div style="display:flex; gap: var(--space-1);">
+            <button id="shop-open-btn" class="btn btn--ghost btn--sm">商店</button>
+            <button id="roster-open-btn" class="btn btn--ghost btn--sm">図鑑</button>
+          </div>
         </div>
 
         <div class="party-lane">
@@ -92,6 +95,17 @@
         </div>
 
         <div id="roster-grid" class="starter-grid" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- 商店画面 -->
+      <section class="screen" data-screen="shop">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">商店</h2>
+          <button id="shop-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="shop-gold" class="shop-gold"></div>
+        <div id="shop-list" style="overflow-y: auto;"></div>
       </section>
 
       <!-- モンスター詳細画面(進化・異姿化) -->
