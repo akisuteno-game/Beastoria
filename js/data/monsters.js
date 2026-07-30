@@ -5,12 +5,17 @@
      進化・異姿化・獣魂技などの詳細スキーマは今後のフェーズで拡張する。
    ============================================================ */
 
+import { computeFinalStats } from '../utils/statUtils.js';
+
 // 所持モンスターの連番(仮のID発行用)
 let _instanceSeq = 0;
 
 // 図鑑データ(species)から実際に所持する1体のインスタンスを生成する
 export function createMonsterInstance(species) {
   _instanceSeq += 1;
+  const baseStats = { ...species.baseStats };
+  const formGrowth = { hp: 1, atk: 1, def: 1, spd: 1 }; // 進化・異姿化前は等倍
+
   return {
     instanceId: `${species.id}-${_instanceSeq}`,
     speciesId: species.id,
@@ -18,8 +23,11 @@ export function createMonsterInstance(species) {
     attribute: species.attribute,
     role: species.role,
     rarity: species.rarity,
-    baseStats: { ...species.baseStats },
-    stats: { ...species.baseStats },
+    baseStats,
+    formGrowth,
+    level: 1,
+    xp: 0,
+    stats: computeFinalStats(baseStats, formGrowth, 1),
     evolutionStage: species.evolution.stage,
     attributeLocked: false,
     transformationStage: 0,
