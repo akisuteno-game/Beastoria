@@ -16,6 +16,16 @@ export const TRANSFORMATIONS = {
     requiredItemId: 'ember-shard',
     statGrowth: { hp: 1.1, atk: 1.3, def: 1.0, spd: 1.2 },
   },
+  mizmol: {
+    name: 'ミズモル(深潮)',
+    requiredItemId: 'tide-pearl',
+    statGrowth: { hp: 1.3, atk: 1.1, def: 1.2, spd: 1.0 },
+  },
+  leafy: {
+    name: 'リーフィ(月光)',
+    requiredItemId: 'moon-leaf',
+    statGrowth: { hp: 1.1, atk: 1.1, def: 1.1, spd: 1.4 },
+  },
 };
 
 export function getTransformationData(speciesId) {
