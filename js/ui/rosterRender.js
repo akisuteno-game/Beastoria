@@ -22,7 +22,7 @@ function buildOwnedCard(instance, onSelect) {
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
       <div class="monster-card__name">${instance.name}</div>
       <span class="attr-badge ${attr.badgeClass}">${attr.label}属性</span>
-      <div class="monster-card__type">${stageLabel(instance)}</div>
+      <div class="monster-card__type">Lv.${instance.level} ・ ${stageLabel(instance)}</div>
       <div class="rarity">${rarityToStars(instance.rarity)}</div>
     </div>
   `;
