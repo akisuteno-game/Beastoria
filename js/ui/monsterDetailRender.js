@@ -11,6 +11,7 @@ import { ATTRIBUTES, rarityToStars, ROLE_LABEL } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
 import { canEvolve, EVOLUTION_STONE_COST, MAX_EVOLUTION_STAGE } from '../systems/evolution.js';
 import { canTransform, hasTransformationItemReady } from '../systems/transformation.js';
+import { xpToNextLevel } from '../systems/leveling.js';
 
 export function renderMonsterDetail(container, instance, inventory, handlers) {
   const attr = ATTRIBUTES[instance.attribute];
@@ -23,6 +24,9 @@ export function renderMonsterDetail(container, instance, inventory, handlers) {
   const transformReady = !alreadyTransformed && hasTransformationItemReady(instance, inventory);
   const showTransformSection = alreadyTransformed || transformReady;
 
+  const xpNeeded = xpToNextLevel(instance.level);
+  const xpPct = Math.round((instance.xp / xpNeeded) * 100);
+
   container.innerHTML = `
     <div class="panel panel--raised monster-detail__main">
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
@@ -30,6 +34,10 @@ export function renderMonsterDetail(container, instance, inventory, handlers) {
       <span class="attr-badge ${attr.badgeClass}">${attr.label}属性${instance.attributeLocked ? '(固定)' : ''}</span>
       <div class="monster-card__type">${ROLE_LABEL[instance.role]}</div>
       <div class="rarity">${rarityToStars(instance.rarity)}</div>
+
+      <div class="detail-level">Lv. ${instance.level}</div>
+      <div class="bar bar--xp"><div class="bar__fill" style="width:${xpPct}%"></div></div>
+      <span class="bar__label">EXP ${instance.xp} / ${xpNeeded}</span>
 
       <ul class="stat-list">
         <li>HP <span>${instance.stats.hp}</span></li>
