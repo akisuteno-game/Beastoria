@@ -14,6 +14,14 @@ export const ALT_EVOLUTIONS = {
     { stage: 2, name: 'クロエンガル', statGrowth: { hp: 1.5, atk: 2.0, def: 1.3, spd: 1.6 } },
     { stage: 3, name: 'ゴウカエンペラー', statGrowth: { hp: 2.1, atk: 2.9, def: 1.8, spd: 2.0 } },
   ],
+  mizmol: [
+    { stage: 2, name: 'シンチョウガル', statGrowth: { hp: 2.0, atk: 1.5, def: 1.7, spd: 1.2 } },
+    { stage: 3, name: 'アビスマジェスタ', statGrowth: { hp: 2.8, atk: 2.1, def: 2.3, spd: 1.6 } },
+  ],
+  leafy: [
+    { stage: 2, name: 'ムーングロウ', statGrowth: { hp: 1.5, atk: 1.5, def: 1.4, spd: 1.9 } },
+    { stage: 3, name: 'ルナヴェルデ', statGrowth: { hp: 2.1, atk: 2.1, def: 1.9, spd: 2.6 } },
+  ],
 };
 
 export function getNextAltEvolutionData(speciesId, currentStage) {
