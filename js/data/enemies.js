@@ -18,6 +18,11 @@ export const RIVERSIDE_GROUP = [
   { id: 'e-water-2',  name: 'ティアクラブ',   attribute: 'water', row: 'back',  stats: { hp: 30, atk: 8, def: 8, spd: 5 } },
 ];
 
+export const CAVE_GROUP = [
+  { id: 'e-cave-1', name: 'ストーンモール', attribute: 'forest', row: 'front', stats: { hp: 34, atk: 9, def: 10, spd: 4 } },
+  { id: 'e-cave-2', name: 'エンバーバット', attribute: 'fire',  row: 'back',  stats: { hp: 18, atk: 11, def: 2, spd: 12 } },
+];
+
 export const RUIN_BOSS_GROUP = [
   { id: 'e-boss-1',  name: '古の番人イグナロス', attribute: 'fire', row: 'front', stats: { hp: 70, atk: 14, def: 9, spd: 8 } },
   { id: 'e-boss-add', name: '守護の残滓', attribute: 'forest', row: 'back', stats: { hp: 24, atk: 6, def: 5, spd: 6 } },
