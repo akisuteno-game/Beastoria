@@ -8,7 +8,7 @@
    ============================================================ */
 
 import { getTransformationData } from '../data/transformations.js';
-import { scaleStats } from '../utils/statUtils.js';
+import { recomputeStats } from './leveling.js';
 
 // 異姿化データが存在し、まだ基本形のままの個体にのみ許可する
 export function canTransform(instance) {
@@ -36,7 +36,8 @@ export function transformMonster(instance, inventory) {
   inventory.consumeItem(data.requiredItemId, 1);
   instance.transformationStage = 1;
   instance.name = data.name;
-  instance.stats = scaleStats(instance.baseStats, data.statGrowth);
+  instance.formGrowth = data.statGrowth;
+  recomputeStats(instance);
 
   return { success: true };
 }
