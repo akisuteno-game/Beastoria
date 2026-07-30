@@ -17,6 +17,7 @@ import { addExperience } from './systems/leveling.js';
 import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
 import { initViewportScale } from './systems/viewport.js';
 import { hasSaveData, saveGame, loadSaveData } from './systems/saveLoad.js';
+import { STONE_PURCHASE_AMOUNT } from './data/shop.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
 import { renderPartyAddList } from './ui/partyAddRender.js';
@@ -24,6 +25,7 @@ import { renderBattle } from './ui/battleRender.js';
 import { renderMonsterDetail } from './ui/monsterDetailRender.js';
 import { renderRoster } from './ui/rosterRender.js';
 import { renderMap } from './ui/mapRender.js';
+import { renderShop } from './ui/shopRender.js';
 
 let selectedStarter = null;
 let party = new Party();
@@ -63,6 +65,7 @@ function applySaveData(data) {
   inventory = new Inventory();
   inventory.stones = data.stones;
   inventory.items = data.items;
+  inventory.gold = data.gold ?? inventory.gold;
 
   exploration = new ExplorationState(FOREST_MAP);
   exploration.unlocked = new Set(data.exploration.unlocked);
@@ -114,6 +117,21 @@ function refreshPartyAddScreen() {
   });
 }
 
+function refreshShopScreen() {
+  renderShop(
+    document.querySelector('#shop-list'),
+    document.querySelector('#shop-gold'),
+    inventory,
+    (attribute, cost) => {
+      if (inventory.spendGold(cost)) {
+        inventory.addStones(attribute, STONE_PURCHASE_AMOUNT);
+      }
+      refreshShopScreen();
+      persist();
+    }
+  );
+}
+
 function refreshRosterScreen() {
   renderRoster(document.querySelector('#roster-grid'), roster, STARTERS, (instanceId) => {
     detailInstanceId = instanceId;
@@ -162,6 +180,9 @@ function claimTreasure(node) {
   if (node.reward.items) {
     node.reward.items.forEach((it) => inventory.addItem(it.itemId, it.amount));
   }
+  if (node.reward.gold) {
+    inventory.addGold(node.reward.gold);
+  }
   exploration.clearNode(node.id);
   refreshMapScreen();
   persist();
@@ -190,6 +211,7 @@ function handleBattleEndIfNeeded() {
       const xpReward = currentBattleNode.xpReward ?? 0;
       party.members.forEach((member) => addExperience(member.monster, xpReward));
       exploration.clearNode(currentBattleNode.id);
+      inventory.addGold(currentBattleNode.goldReward ?? 0);
     }
     persist();
   }
@@ -285,6 +307,15 @@ function init() {
 
   document.querySelector('#map-party-btn').addEventListener('click', () => {
     refreshPartyScreen();
+    screens.show('party');
+  });
+
+  document.querySelector('#shop-open-btn').addEventListener('click', () => {
+    refreshShopScreen();
+    screens.show('shop');
+  });
+
+  document.querySelector('#shop-back-btn').addEventListener('click', () => {
     screens.show('party');
   });
 
