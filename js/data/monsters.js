@@ -34,6 +34,18 @@ export function createMonsterInstance(species) {
   };
 }
 
+// セーブデータ読み込み後、インスタンスIDの連番が重複しないように
+// 読み込んだ所持モンスターの中で最大の連番まで進めておく
+export function syncInstanceSeq(monsters) {
+  monsters.forEach((m) => {
+    const match = /-(\d+)$/.exec(m.instanceId);
+    if (match) {
+      const n = parseInt(match[1], 10);
+      if (n > _instanceSeq) _instanceSeq = n;
+    }
+  });
+}
+
 export const STARTERS = [
   {
     id: 'fangle',
