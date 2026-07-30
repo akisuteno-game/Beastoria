@@ -10,7 +10,7 @@
 import { computeFinalStats } from '../utils/statUtils.js';
 
 export function xpToNextLevel(level) {
-  return level * 50;
+  return level * 30;
 }
 
 // instance.formGrowth(進化・異姿化による倍率)を踏まえてステータスを再計算する
