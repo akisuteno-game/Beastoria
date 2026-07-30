@@ -17,6 +17,7 @@ function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
       <div class="monster-card__name">${monster.name}</div>
       <span class="attr-badge ${attr.badgeClass}">${attr.label}属性</span>
+      <div class="monster-card__type">Lv.${monster.level}</div>
     </div>
     <div class="party-slot__controls">
       <button class="btn btn--ghost btn--sm" data-action="detail">詳細</button>
