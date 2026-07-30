@@ -159,6 +159,18 @@
   max-width: 260px;
 }
 
+.map-tier {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.map-tier--branch .map-node {
+  max-width: 150px;
+}
+
 .map-connector {
   width: 2px;
   height: 28px;
