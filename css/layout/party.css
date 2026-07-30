@@ -1,0 +1,29 @@
+/* ============================================================
+   party.css (layout)
+   パーティ編成レーン(前衛/後衛)のグリッド配置
+   ============================================================ */
+
+.party-lane {
+  margin-bottom: var(--space-4);
+}
+
+.party-lane__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+.party-lane__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  min-height: 120px;
+}
+
+@media (max-width: 560px) {
+  .party-lane__row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

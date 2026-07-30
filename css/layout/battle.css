@@ -1,0 +1,39 @@
+/* ============================================================
+   battle.css (layout)
+   バトル画面: 左=味方 / 右=敵 の横型レイアウト
+   ============================================================ */
+
+.battle-arena {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 0;
+}
+
+.battle-lane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 47%;
+  overflow-y: auto;
+}
+
+.battle-lane--enemy {
+  align-items: flex-end;
+}
+
+.battle-log {
+  height: 130px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+  border-top: 2px solid var(--color-line);
+  padding-top: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.battle-log__line {
+  padding: 2px 0;
+}
