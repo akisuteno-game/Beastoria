@@ -34,10 +34,11 @@ function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
   return card;
 }
 
-function buildEmptySlot() {
+function buildEmptySlot(onAdd) {
   const el = document.createElement('div');
   el.className = 'party-slot party-slot--empty panel';
-  el.innerHTML = `<span class="party-slot__placeholder">空き枠</span>`;
+  el.innerHTML = `<span class="party-slot__placeholder">空き枠<br>タップして追加</span>`;
+  el.addEventListener('click', () => onAdd());
   return el;
 }
 
@@ -57,9 +58,9 @@ export function renderPartyLanes(frontEl, backEl, party, handlers) {
     );
   });
 
-  // 残り枠を「空き枠」として表示(4体になるまで)
+  // 残り枠を「空き枠」として表示(4体になるまで)。タップで追加画面を開く。
   const emptyCount = MAX_PARTY_SIZE - party.members.length;
   for (let i = 0; i < emptyCount; i += 1) {
-    backEl.appendChild(buildEmptySlot());
+    backEl.appendChild(buildEmptySlot(handlers.onAdd));
   }
 }
