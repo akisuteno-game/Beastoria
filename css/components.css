@@ -125,6 +125,12 @@
   align-items: center;
   min-height: 110px;
   border-style: dashed;
+  cursor: pointer;
+}
+
+.party-slot--empty:hover {
+  border-color: var(--color-gold-bright);
+  background: var(--color-panel-raised);
 }
 
 .party-slot__placeholder {
@@ -187,6 +193,17 @@
 
 .bar--gauge .bar__fill {
   background: var(--color-gold);
+}
+
+.bar--xp .bar__fill {
+  background: var(--color-water);
+}
+
+.detail-level {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  margin-top: var(--space-1);
 }
 
 .bar__label {
