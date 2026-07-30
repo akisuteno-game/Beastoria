@@ -3,7 +3,7 @@
    エントリーポイント
    ============================================================ */
 
-import { STARTERS, createMonsterInstance } from './data/monsters.js';
+import { STARTERS, createMonsterInstance, syncInstanceSeq } from './data/monsters.js';
 import { FOREST_MAP } from './data/mapNodes.js';
 import { ScreenManager } from './systems/screens.js';
 import { Party } from './systems/party.js';
@@ -16,6 +16,7 @@ import { transformMonster } from './systems/transformation.js';
 import { addExperience } from './systems/leveling.js';
 import { createAllyUnit, createEnemyUnit } from './systems/battleUnit.js';
 import { initViewportScale } from './systems/viewport.js';
+import { hasSaveData, saveGame, loadSaveData } from './systems/saveLoad.js';
 import { renderStarterGrid } from './ui/render.js';
 import { renderPartyLanes } from './ui/partyRender.js';
 import { renderPartyAddList } from './ui/partyAddRender.js';
@@ -25,10 +26,10 @@ import { renderRoster } from './ui/rosterRender.js';
 import { renderMap } from './ui/mapRender.js';
 
 let selectedStarter = null;
-const party = new Party();
-const roster = new Roster();
-const inventory = new Inventory();
-const exploration = new ExplorationState(FOREST_MAP);
+let party = new Party();
+let roster = new Roster();
+let inventory = new Inventory();
+let exploration = new ExplorationState(FOREST_MAP);
 
 let battle = null;
 let battleTimer = null;
@@ -43,6 +44,31 @@ function showScreenByName(name) {
   if (_screens) _screens.show(name);
 }
 
+// 主要なアクションのたびに呼び、進行状況を保存する
+function persist() {
+  saveGame({ roster, party, inventory, exploration });
+}
+
+function applySaveData(data) {
+  roster = new Roster();
+  data.roster.forEach((m) => roster.addMonster(m));
+  syncInstanceSeq(roster.list);
+
+  party = new Party();
+  data.partyMembers.forEach(({ instanceId, row }) => {
+    const monster = roster.findById(instanceId);
+    if (monster) party.addMember(monster, row);
+  });
+
+  inventory = new Inventory();
+  inventory.stones = data.stones;
+  inventory.items = data.items;
+
+  exploration = new ExplorationState(FOREST_MAP);
+  exploration.unlocked = new Set(data.exploration.unlocked);
+  exploration.cleared = new Set(data.exploration.cleared);
+}
+
 function refreshPartyScreen() {
   renderPartyLanes(
     document.querySelector('#party-front'),
@@ -52,10 +78,12 @@ function refreshPartyScreen() {
       onToggleRow: (instanceId) => {
         party.toggleRow(instanceId);
         refreshPartyScreen();
+        persist();
       },
       onRemove: (instanceId) => {
         party.removeMember(instanceId);
         refreshPartyScreen();
+        persist();
       },
       onDetail: (instanceId) => {
         detailInstanceId = instanceId;
@@ -82,6 +110,7 @@ function refreshPartyAddScreen() {
     }
     refreshPartyScreen();
     showScreenByName('party');
+    persist();
   });
 }
 
@@ -102,11 +131,13 @@ function refreshDetailScreen() {
       const target = roster.findById(instanceId);
       if (target) evolveMonster(target, inventory);
       refreshDetailScreen();
+      persist();
     },
     onTransform: (instanceId) => {
       const target = roster.findById(instanceId);
       if (target) transformMonster(target, inventory);
       refreshDetailScreen();
+      persist();
     },
   });
 }
@@ -133,6 +164,7 @@ function claimTreasure(node) {
   }
   exploration.clearNode(node.id);
   refreshMapScreen();
+  persist();
 }
 
 function refreshBattleScreen() {
@@ -159,6 +191,7 @@ function handleBattleEndIfNeeded() {
       party.members.forEach((member) => addExperience(member.monster, xpReward));
       exploration.clearNode(currentBattleNode.id);
     }
+    persist();
   }
 
   document.querySelector('#battle-back-btn').style.display = '';
@@ -203,8 +236,21 @@ function init() {
   _screens = screens;
   screens.show('title');
 
+  const continueBtn = document.querySelector('#continue-btn');
+  if (hasSaveData()) {
+    continueBtn.style.display = '';
+  }
+
   document.querySelector('#start-btn').addEventListener('click', () => {
     screens.show('home');
+  });
+
+  continueBtn.addEventListener('click', () => {
+    const data = loadSaveData();
+    if (!data) return;
+    applySaveData(data);
+    refreshPartyScreen();
+    screens.show('party');
   });
 
   const grid = document.querySelector('#starter-grid');
@@ -223,6 +269,7 @@ function init() {
     party.addMember(instance, 'front');
     refreshPartyScreen();
     screens.show('party');
+    persist();
   });
 
   document.querySelector('#party-done-btn').addEventListener('click', () => {
