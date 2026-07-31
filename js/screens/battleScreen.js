@@ -3,7 +3,7 @@
    バトル画面
    ============================================================ */
 
-import { state, showScreen, persist } from '../state.js';
+import { state, showScreen, persist, getCurrentExploration } from '../state.js';
 import { Battle } from '../systems/battle.js';
 import { createAllyUnit, createEnemyUnit } from '../systems/battleUnit.js';
 import { addExperience } from '../systems/leveling.js';
@@ -35,7 +35,7 @@ function handleBattleEndIfNeeded() {
     if (node) {
       const xpReward = node.xpReward ?? 0;
       state.party.members.forEach((member) => addExperience(member.monster, xpReward));
-      state.exploration.clearNode(node.id);
+      getCurrentExploration().clearNode(node.id);
       state.inventory.addGold(node.goldReward ?? 0);
     }
     persist();
