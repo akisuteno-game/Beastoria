@@ -24,6 +24,18 @@ export const EVOLUTIONS = {
     { stage: 2, name: 'フォレスティア', statGrowth: { hp: 1.5, atk: 1.4, def: 1.5, spd: 1.7 } },
     { stage: 3, name: 'フォレストレント', statGrowth: { hp: 2.1, atk: 1.9, def: 2.1, spd: 2.3 } },
   ],
+  kokerin: [
+    { stage: 2, name: 'コケリオン', statGrowth: { hp: 1.5, atk: 1.4, def: 1.5, spd: 1.6 } },
+    { stage: 3, name: 'モスドリアード', statGrowth: { hp: 2.1, atk: 1.9, def: 2.1, spd: 2.2 } },
+  ],
+  shizuku: [
+    { stage: 2, name: 'シズガーディ', statGrowth: { hp: 1.7, atk: 1.3, def: 1.8, spd: 1.3 } },
+    { stage: 3, name: 'アクアバスチオン', statGrowth: { hp: 2.4, atk: 1.7, def: 2.5, spd: 1.6 } },
+  ],
+  pachitto: [
+    { stage: 2, name: 'パチゼル', statGrowth: { hp: 1.5, atk: 1.8, def: 1.4, spd: 1.5 } },
+    { stage: 3, name: 'パチュランダー', statGrowth: { hp: 2.1, atk: 2.6, def: 1.9, spd: 2.0 } },
+  ],
 };
 
 // evolutionStage(現在) を指定すると、次の進化段階の定義を返す
