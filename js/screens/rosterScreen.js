@@ -4,12 +4,15 @@
    ============================================================ */
 
 import { STARTERS } from '../data/monsters.js';
+import { EGG_MONSTERS } from '../data/eggMonsters.js';
 import { state, showScreen } from '../state.js';
 import { renderRoster } from '../ui/rosterRender.js';
 import { refreshDetailScreen } from './monsterDetailScreen.js';
 
+const ALL_SPECIES = [...STARTERS, ...EGG_MONSTERS];
+
 export function refreshRosterScreen() {
-  renderRoster(document.querySelector('#roster-grid'), state.roster, STARTERS, (instanceId) => {
+  renderRoster(document.querySelector('#roster-grid'), state.roster, ALL_SPECIES, (instanceId) => {
     state.detailInstanceId = instanceId;
     state.detailReturnScreen = 'roster';
     refreshDetailScreen();
