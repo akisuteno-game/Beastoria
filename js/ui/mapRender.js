@@ -7,7 +7,7 @@
    分岐(プレイヤーがどちらか一方を選ぶ)であることを示す。
    ============================================================ */
 
-import { NODE_TYPE_LABEL } from '../data/mapNodes.js';
+import { NODE_TYPE_LABEL } from '../data/maps/index.js';
 
 const TYPE_ICON = {
   battle: '⚔',
@@ -40,19 +40,22 @@ function computeTiers(mapData) {
 }
 
 function buildNodePanel(node, status, onSelectNode) {
+  const replayable = status === 'cleared' && node.type !== 'treasure';
+  const clickable = status === 'current' || replayable;
+
   const el = document.createElement('div');
-  el.className = `map-node map-node--${status}`;
+  el.className = `map-node map-node--${status}${replayable ? ' map-node--replayable' : ''}`;
   el.innerHTML = `
     <div class="panel map-node__panel">
       <span class="map-node__icon">${TYPE_ICON[node.type] ?? '？'}</span>
       <div class="map-node__label">${node.label}</div>
       <span class="map-node__type">${NODE_TYPE_LABEL[node.type] ?? ''}</span>
       <span class="map-node__status">${
-        status === 'cleared' ? 'クリア済み' : status === 'current' ? '挑戦できる' : '未開放'
+        replayable ? '再挑戦できる' : status === 'cleared' ? 'クリア済み' : status === 'current' ? '挑戦できる' : '未開放'
       }</span>
     </div>
   `;
-  if (status === 'current') {
+  if (clickable) {
     el.addEventListener('click', () => onSelectNode(node));
   }
   return el;
