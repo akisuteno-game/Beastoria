@@ -26,6 +26,21 @@ export const TRANSFORMATIONS = {
     requiredItemId: 'moon-leaf',
     statGrowth: { hp: 1.1, atk: 1.1, def: 1.1, spd: 1.4 },
   },
+  kokerin: {
+    name: 'コケリン(星影)',
+    requiredItemId: 'starlit-acorn',
+    statGrowth: { hp: 1.2, atk: 1.1, def: 1.2, spd: 1.4 },
+  },
+  shizuku: {
+    name: 'シズック(深淵)',
+    requiredItemId: 'abyssal-shell',
+    statGrowth: { hp: 1.3, atk: 1.1, def: 1.4, spd: 1.0 },
+  },
+  pachitto: {
+    name: 'パチット(灼熱)',
+    requiredItemId: 'spark-core',
+    statGrowth: { hp: 1.1, atk: 1.4, def: 1.0, spd: 1.3 },
+  },
 };
 
 export function getTransformationData(speciesId) {
