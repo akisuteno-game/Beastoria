@@ -54,7 +54,7 @@ export const STARTERS = [
     role: 'attack',
     rarity: 1,
     baseStats: { hp: 32, atk: 12, def: 7, spd: 9 },
-    evolution: { stage: 1, maxStage: 2, stoneCost: 20 },
+    evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
   {
     id: 'mizmol',
@@ -63,7 +63,7 @@ export const STARTERS = [
     role: 'defense',
     rarity: 1,
     baseStats: { hp: 40, atk: 7, def: 11, spd: 6 },
-    evolution: { stage: 1, maxStage: 2, stoneCost: 20 },
+    evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
   {
     id: 'leafy',
@@ -72,6 +72,6 @@ export const STARTERS = [
     role: 'support',
     rarity: 1,
     baseStats: { hp: 30, atk: 6, def: 8, spd: 10 },
-    evolution: { stage: 1, maxStage: 2, stoneCost: 20 },
+    evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
 ];
