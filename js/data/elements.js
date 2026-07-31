@@ -1,28 +1,61 @@
 /* ============================================================
    elements.js
-   属性相性システム(10属性)
+   属性相性システム(10属性・直感的な弱点関係)
 
-   炎→森→雷→氷→水→地→光→闇→風→無→炎 の一巡する相性の輪。
-   3属性のときと同じ考え方(隣を1つ倒せる/1つに弱い)を維持したまま
-   属性数だけ拡張した。
-   有利: 1.5倍 / 不利: 0.7倍 / それ以外: 等倍
+   実際の自然現象に近い、感覚的にわかりやすい一方向の相性リスト。
+   一律の輪ではなく、属性ごとに個別の弱点を定義している。
+
+   - 炎は森に強い(燃やす)
+   - 森は水に強い(吸い上げる)
+   - 水は炎に強い(消し止める)
+   - 炎は氷に強い(溶かす)
+   - 氷は水に強い(凍らせる)
+   - 雷は水に強い(感電させる)
+   - 地は雷に強い(アースする)
+   - 風は地に強い(削り飛ばす)
+   - 森は風に強い(受け流す・根で耐える)
+   - 光と闇は互いに弱点(相互に1.5倍)
+   - 無はどの属性とも干渉しない(常に等倍)
+
+   ここに無い組み合わせはすべて等倍(互角)。
    ============================================================ */
 
-const ADVANTAGE_CYCLE = [
-  'fire', 'forest', 'thunder', 'ice', 'water',
-  'earth', 'light', 'dark', 'wind', 'void',
+// [攻撃側, 防御側] … 攻撃側が1.5倍のダメージを与える一方向の関係
+const ADVANTAGE_PAIRS = [
+  ['fire', 'forest'],
+  ['forest', 'water'],
+  ['water', 'fire'],
+  ['fire', 'ice'],
+  ['ice', 'water'],
+  ['thunder', 'water'],
+  ['earth', 'thunder'],
+  ['wind', 'earth'],
+  ['forest', 'wind'],
 ];
 
-// key(攻撃側の属性) が強い相手の属性
-const ADVANTAGE_OVER = {};
-ADVANTAGE_CYCLE.forEach((attr, i) => {
-  const next = ADVANTAGE_CYCLE[(i + 1) % ADVANTAGE_CYCLE.length];
-  ADVANTAGE_OVER[attr] = next;
-});
+const STRONG_MULT = 1.5;
 
 export function getElementalMultiplier(attackerAttr, defenderAttr) {
   if (attackerAttr === defenderAttr) return 1;
-  if (ADVANTAGE_OVER[attackerAttr] === defenderAttr) return 1.5;
-  if (ADVANTAGE_OVER[defenderAttr] === attackerAttr) return 0.7;
+
+  // 無属性はどちらの側にいても常に等倍
+  if (attackerAttr === 'void' || defenderAttr === 'void') return 1;
+
+  // 光と闇は相互に弱点(どちらから攻めても1.5倍)
+  const isLightDarkPair =
+    (attackerAttr === 'light' && defenderAttr === 'dark') ||
+    (attackerAttr === 'dark' && defenderAttr === 'light');
+  if (isLightDarkPair) return STRONG_MULT;
+
+  const isAdvantage = ADVANTAGE_PAIRS.some(
+    ([a, d]) => a === attackerAttr && d === defenderAttr
+  );
+  if (isAdvantage) return STRONG_MULT;
+
   return 1;
+}
+
+// デバッグ・確認用に相性ペア一覧を取り出せるようにしておく
+export function getAdvantagePairs() {
+  return ADVANTAGE_PAIRS;
 }
