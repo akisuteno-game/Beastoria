@@ -7,7 +7,7 @@ import { state, showScreen, persist } from '../state.js';
 import { renderPartyLanes } from '../ui/partyRender.js';
 import { refreshDetailScreen } from './monsterDetailScreen.js';
 import { refreshPartyAddScreen } from './partyAddScreen.js';
-import { refreshMapScreen } from './mapScreen.js';
+import { refreshMapSelectScreen } from './mapSelectScreen.js';
 
 export function refreshPartyScreen() {
   renderPartyLanes(
@@ -42,7 +42,7 @@ export function refreshPartyScreen() {
 export function setup() {
   document.querySelector('#party-done-btn').addEventListener('click', () => {
     if (state.party.members.length === 0) return;
-    refreshMapScreen();
-    showScreen('map');
+    refreshMapSelectScreen();
+    showScreen('map-select');
   });
 }
