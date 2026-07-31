@@ -15,10 +15,17 @@
   --color-gold: #e3a530;        /* アクセント・CTA・レア度 */
   --color-gold-bright: #f6c65a;
 
-  /* --- 属性カラー --- */
+  /* --- 属性カラー(10属性) --- */
   --color-fire: #e2503a;
   --color-water: #3d95c9;
   --color-forest: #4f9b52;
+  --color-thunder: #d9c72e;
+  --color-ice: #8fd8e8;
+  --color-earth: #8a6a42;
+  --color-wind: #7fcbb0;
+  --color-light: #f2e9c9;
+  --color-dark: #6b4a8a;
+  --color-attr-void: #b8b0c8;
 
   /* --- タイポグラフィ --- */
   --font-display: 'DotGothic16', 'MS Gothic', monospace; /* ロゴ・見出し(ドット文字) */
