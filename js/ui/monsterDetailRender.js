@@ -51,7 +51,7 @@ export function renderMonsterDetail(container, instance, inventory, handlers) {
       <h3 class="section-title">進化 (${instance.evolutionStage} / ${MAX_EVOLUTION_STAGE})</h3>
       ${
         evolveOk
-          ? `<p class="detail-note">${attr.label}属性石 ${EVOLUTION_STONE_COST}個が必要(所持: ${stoneCount}個)</p>
+          ? `<p class="detail-note">${attr.stoneName} ${EVOLUTION_STONE_COST}個が必要(所持: ${stoneCount}個)</p>
              <button id="evolve-btn" class="btn ${stoneOk ? '' : 'btn--ghost'}" ${stoneOk ? '' : 'disabled'}>進化させる</button>`
           : `<p class="detail-note">${instance.evolutionStage >= MAX_EVOLUTION_STAGE ? 'これ以上は進化しません' : '進化データがありません'}</p>`
       }
