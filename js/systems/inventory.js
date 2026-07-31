@@ -10,7 +10,10 @@
 
 export class Inventory {
   constructor() {
-    this.stones = { fire: 20, water: 20, forest: 20 };
+    this.stones = {
+      fire: 20, water: 20, forest: 20, thunder: 20, ice: 20,
+      earth: 20, wind: 20, light: 20, dark: 20, void: 20,
+    };
     this.items = {}; // itemId -> 所持数
     this.gold = 50; // 検証用の初期所持金(仮)
   }
