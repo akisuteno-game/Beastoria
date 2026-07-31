@@ -27,18 +27,18 @@ export const TRANSFORMATIONS = {
     statGrowth: { hp: 1.1, atk: 1.1, def: 1.1, spd: 1.4 },
   },
   kokerin: {
-    name: 'コケリン(星影)',
-    requiredItemId: 'starlit-acorn',
+    name: 'コケリン(ゲイル)',
+    requiredItemId: 'gale-crystal',
     statGrowth: { hp: 1.2, atk: 1.1, def: 1.2, spd: 1.4 },
   },
   shizuku: {
-    name: 'シズック(深淵)',
-    requiredItemId: 'abyssal-shell',
+    name: 'シズック(テラ)',
+    requiredItemId: 'terra-stone',
     statGrowth: { hp: 1.3, atk: 1.1, def: 1.4, spd: 1.0 },
   },
   pachitto: {
-    name: 'パチット(灼熱)',
-    requiredItemId: 'spark-core',
+    name: 'パチット(ボルト)',
+    requiredItemId: 'thunder-core',
     statGrowth: { hp: 1.1, atk: 1.4, def: 1.0, spd: 1.3 },
   },
 };
