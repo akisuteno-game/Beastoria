@@ -30,7 +30,7 @@ export const EVOLUTIONS = {
   ],
   shizuku: [
     { stage: 2, name: 'シズガーディ', statGrowth: { hp: 1.7, atk: 1.3, def: 1.8, spd: 1.3 } },
-    { stage: 3, name: 'アクアバスチオン', statGrowth: { hp: 2.4, atk: 1.7, def: 2.5, spd: 1.6 } },
+    { stage: 3, name: 'アースバスチオン', statGrowth: { hp: 2.4, atk: 1.7, def: 2.5, spd: 1.6 } },
   ],
   pachitto: [
     { stage: 2, name: 'パチゼル', statGrowth: { hp: 1.5, atk: 1.8, def: 1.4, spd: 1.5 } },
