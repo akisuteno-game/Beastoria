@@ -22,6 +22,13 @@
   font-weight: bold;
 }
 
-.attr-badge--fire   { background: var(--color-fire); }
-.attr-badge--water  { background: var(--color-water); }
-.attr-badge--forest { background: var(--color-forest); }
+.attr-badge--fire    { background: var(--color-fire); }
+.attr-badge--water   { background: var(--color-water); }
+.attr-badge--forest  { background: var(--color-forest); }
+.attr-badge--thunder { background: var(--color-thunder); }
+.attr-badge--ice     { background: var(--color-ice); }
+.attr-badge--earth   { background: var(--color-earth); color: var(--color-parchment); }
+.attr-badge--wind    { background: var(--color-wind); }
+.attr-badge--light   { background: var(--color-light); }
+.attr-badge--dark    { background: var(--color-dark); color: var(--color-parchment); }
+.attr-badge--void    { background: var(--color-attr-void); }
