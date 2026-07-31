@@ -49,3 +49,16 @@
 .map-node--cleared .map-node__status {
   color: var(--color-forest);
 }
+
+.map-node--replayable .map-node__panel {
+  cursor: pointer;
+  border-color: var(--color-forest);
+}
+
+.map-node--replayable .map-node__status {
+  color: var(--color-forest);
+}
+
+.map-node--replayable .map-node__panel:hover {
+  border-color: var(--color-gold-bright);
+}
