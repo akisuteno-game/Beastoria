@@ -2,12 +2,13 @@
    saveLoad.js
    セーブ・ロード(タイトル画面の「つづきから」用)
 
-   所持モンスター(Roster)・パーティ編成・所持アイテム・探索の
-   進行状況をlocalStorageに保存する。バトル中の一時的な状態は
-   保存しない(バトルはノードに再挑戦すれば毎回フルHPで始まる)。
+   所持モンスター(Roster)・パーティ編成・所持アイテム・
+   全マップそれぞれの探索進行状況をlocalStorageに保存する。
+   バトル中の一時的な状態は保存しない(バトルはノードに再挑戦
+   すれば毎回フルHPで始まる)。
    ============================================================ */
 
-const SAVE_KEY = 'beastoria-save-v1';
+const SAVE_KEY = 'beastoria-save-v2';
 
 export function hasSaveData() {
   try {
@@ -17,8 +18,16 @@ export function hasSaveData() {
   }
 }
 
-export function saveGame({ roster, party, inventory, exploration }) {
+export function saveGame({ roster, party, inventory, explorations, currentMapId }) {
   try {
+    const explorationsPayload = {};
+    Object.entries(explorations).forEach(([mapId, exploration]) => {
+      explorationsPayload[mapId] = {
+        unlocked: [...exploration.unlocked],
+        cleared: [...exploration.cleared],
+      };
+    });
+
     const payload = {
       roster: roster.list,
       partyMembers: party.members.map((m) => ({
@@ -28,10 +37,8 @@ export function saveGame({ roster, party, inventory, exploration }) {
       stones: inventory.stones,
       items: inventory.items,
       gold: inventory.gold,
-      exploration: {
-        unlocked: [...exploration.unlocked],
-        cleared: [...exploration.cleared],
-      },
+      explorations: explorationsPayload,
+      currentMapId,
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
     return true;
