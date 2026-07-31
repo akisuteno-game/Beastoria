@@ -1,15 +1,18 @@
 /* ============================================================
    screens/mapScreen.js
-   探索マップ画面
+   探索マップ画面(現在選択中のマップを表示する)
    ============================================================ */
 
-import { state, showScreen, persist } from '../state.js';
+import { state, showScreen, persist, getCurrentExploration } from '../state.js';
+import { MAPS } from '../data/maps/index.js';
 import { renderMap } from '../ui/mapRender.js';
 import { startBattle } from './battleScreen.js';
-import { refreshPartyScreen } from './partyScreen.js';
 
 export function refreshMapScreen() {
-  renderMap(document.querySelector('#map-path'), state.exploration, (node) => {
+  const mapData = MAPS[state.currentMapId];
+  document.querySelector('#map-title').textContent = `探索: ${mapData.name}`;
+
+  renderMap(document.querySelector('#map-path'), getCurrentExploration(), (node) => {
     if (node.type === 'treasure') {
       claimTreasure(node);
     } else {
@@ -31,14 +34,13 @@ function claimTreasure(node) {
   if (node.reward.gold) {
     state.inventory.addGold(node.reward.gold);
   }
-  state.exploration.clearNode(node.id);
+  getCurrentExploration().clearNode(node.id);
   refreshMapScreen();
   persist();
 }
 
 export function setup() {
-  document.querySelector('#map-party-btn').addEventListener('click', () => {
-    refreshPartyScreen();
-    showScreen('party');
+  document.querySelector('#map-select-btn').addEventListener('click', () => {
+    showScreen('map-select');
   });
 }
