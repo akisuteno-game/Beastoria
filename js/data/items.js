@@ -12,6 +12,9 @@ export const TRANSFORMATION_ITEMS = {
   fangle: { id: 'ember-shard', name: '燃え残りの火種' },
   mizmol: { id: 'tide-pearl', name: '満ち潮の真珠' },
   leafy: { id: 'moon-leaf', name: '月影の葉' },
+  kokerin: { id: 'starlit-acorn', name: '星影のどんぐり' },
+  shizuku: { id: 'abyssal-shell', name: '深淵の貝殻' },
+  pachitto: { id: 'spark-core', name: '火花の核' },
 };
 
 export function getTransformationItem(speciesId) {
