@@ -4,10 +4,10 @@
    ============================================================ */
 
 import { ATTRIBUTES } from '../data/constants.js';
-import { SHOP_STONE_LIST, STONE_PRICE, STONE_PURCHASE_AMOUNT } from '../data/shop.js';
+import { SHOP_STONE_ATTRIBUTES, STONE_PRICE, STONE_PURCHASE_AMOUNT } from '../data/shop.js';
 import { BASIC_EGG } from '../data/eggs.js';
 
-function renderStoneCard(container, attribute, label, inventory, onBuyStone) {
+function renderStoneCard(container, attribute, inventory, onBuyStone) {
   const attr = ATTRIBUTES[attribute];
   const cost = STONE_PRICE * STONE_PURCHASE_AMOUNT;
   const affordable = inventory.hasGold(cost);
@@ -15,7 +15,7 @@ function renderStoneCard(container, attribute, label, inventory, onBuyStone) {
   const card = document.createElement('div');
   card.className = 'panel shop-item';
   card.innerHTML = `
-    <span class="attr-badge ${attr.badgeClass}">${label}</span>
+    <span class="attr-badge ${attr.badgeClass}">${attr.stoneName}</span>
     <div class="shop-item__stock">所持: ${inventory.stones[attribute] ?? 0}個</div>
     <div class="shop-item__price">${STONE_PURCHASE_AMOUNT}個 = ${cost} G</div>
     <button class="btn btn--sm ${affordable ? '' : 'btn--ghost'}" ${affordable ? '' : 'disabled'}>購入する</button>
@@ -46,7 +46,7 @@ export function renderShop(container, goldEl, inventory, handlers) {
 
   renderEggCard(container, inventory, handlers.onBuyEgg);
 
-  SHOP_STONE_LIST.forEach(({ attribute, label }) => {
-    renderStoneCard(container, attribute, label, inventory, handlers.onBuyStone);
+  SHOP_STONE_ATTRIBUTES.forEach((attribute) => {
+    renderStoneCard(container, attribute, inventory, handlers.onBuyStone);
   });
 }
