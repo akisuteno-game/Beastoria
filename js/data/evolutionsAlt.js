@@ -23,16 +23,16 @@ export const ALT_EVOLUTIONS = {
     { stage: 3, name: 'ルナヴェルデ', statGrowth: { hp: 2.1, atk: 2.1, def: 1.9, spd: 2.6 } },
   ],
   kokerin: [
-    { stage: 2, name: '星のドリアード', statGrowth: { hp: 1.7, atk: 1.6, def: 1.7, spd: 2.0 } },
-    { stage: 3, name: '星霊木モルドゥルース', statGrowth: { hp: 2.3, atk: 2.2, def: 2.3, spd: 2.7 } },
+    { stage: 2, name: 'ゲイルドリアード', statGrowth: { hp: 1.7, atk: 1.6, def: 1.7, spd: 2.0 } },
+    { stage: 3, name: 'テンペストドリアード', statGrowth: { hp: 2.3, atk: 2.2, def: 2.3, spd: 2.7 } },
   ],
   shizuku: [
-    { stage: 2, name: '深淵の守人', statGrowth: { hp: 1.9, atk: 1.5, def: 2.1, spd: 1.2 } },
-    { stage: 3, name: '深淵王ドムスビス', statGrowth: { hp: 2.6, atk: 2.0, def: 2.8, spd: 1.5 } },
+    { stage: 2, name: 'テラガーディアン', statGrowth: { hp: 1.9, atk: 1.5, def: 2.1, spd: 1.2 } },
+    { stage: 3, name: 'テラソブリン', statGrowth: { hp: 2.6, atk: 2.0, def: 2.8, spd: 1.5 } },
   ],
   pachitto: [
-    { stage: 2, name: '灼火のパチゼルフ', statGrowth: { hp: 1.6, atk: 2.1, def: 1.3, spd: 1.7 } },
-    { stage: 3, name: '業炎皇パイロクス', statGrowth: { hp: 2.2, atk: 3.0, def: 1.7, spd: 2.2 } },
+    { stage: 2, name: 'ボルトゼルフ', statGrowth: { hp: 1.6, atk: 2.1, def: 1.3, spd: 1.7 } },
+    { stage: 3, name: 'ボルテックスエンペラー', statGrowth: { hp: 2.2, atk: 3.0, def: 1.7, spd: 2.2 } },
   ],
 };
 
