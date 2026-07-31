@@ -16,7 +16,9 @@ import { setup as setupPartyScreen } from './screens/partyScreen.js';
 import { setup as setupPartyAddScreen } from './screens/partyAddScreen.js';
 import { setup as setupRosterScreen } from './screens/rosterScreen.js';
 import { setup as setupShopScreen } from './screens/shopScreen.js';
+import { setup as setupEggScreen } from './screens/eggScreen.js';
 import { setup as setupMonsterDetailScreen } from './screens/monsterDetailScreen.js';
+import { setup as setupMapSelectScreen } from './screens/mapSelectScreen.js';
 import { setup as setupMapScreen } from './screens/mapScreen.js';
 import { setup as setupBattleScreen } from './screens/battleScreen.js';
 
@@ -32,7 +34,9 @@ function init() {
   setupPartyAddScreen();
   setupRosterScreen();
   setupShopScreen();
+  setupEggScreen();
   setupMonsterDetailScreen();
+  setupMapSelectScreen();
   setupMapScreen();
   setupBattleScreen();
 }
