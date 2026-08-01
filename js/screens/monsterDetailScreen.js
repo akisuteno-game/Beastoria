@@ -10,7 +10,7 @@
 import { state, showScreen, persist } from '../state.js';
 import { renderMonsterDetail } from '../ui/monsterDetailRender.js';
 import { evolveMonster } from '../systems/evolution.js';
-import { transformMonster } from '../systems/transformation.js';
+import { synthesizeCrystal } from '../systems/transformSynthesis.js';
 import { refreshPartyScreen } from './partyScreen.js';
 import { refreshRosterScreen } from './rosterScreen.js';
 
@@ -24,9 +24,9 @@ export function refreshDetailScreen() {
       refreshDetailScreen();
       persist();
     },
-    onTransform: (instanceId) => {
+    onSynthesize: (instanceId, crystalAttribute) => {
       const target = state.roster.findById(instanceId);
-      if (target) transformMonster(target, state.inventory);
+      if (target) synthesizeCrystal(target, crystalAttribute, state.inventory);
       refreshDetailScreen();
       persist();
     },
