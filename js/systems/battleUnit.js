@@ -2,20 +2,22 @@
    battleUnit.js
    バトル中の実行時ステータス(HP・獣魂技ゲージなど)を持つ
    「ユニット」を、味方(所持モンスター)・敵(敵データ)の両方から
-   共通の形で生成する。
+   共通の形で生成する。属性は常に配列(attributes)で統一する。
    ============================================================ */
+
+import { getSpecialMultiplier } from './transformSynthesis.js';
 
 let _unitSeq = 0;
 
-function baseUnit({ id, name, attribute, stats, side, row }) {
+function baseUnit({ id, name, attributes, stats, side, row, specialMultiplier }) {
   _unitSeq += 1;
   return {
     unitId: `unit-${_unitSeq}`,
     sourceId: id,
     name,
-    attribute,
-    side,               // 'ally' | 'enemy'
-    row,                // 'front' | 'back'
+    attributes,          // string[] (通常は1つ、異姙化合成で複数になりうる)
+    side,                // 'ally' | 'enemy'
+    row,                 // 'front' | 'back'
     maxHp: stats.hp,
     hp: stats.hp,
     atk: stats.atk,
@@ -24,6 +26,7 @@ function baseUnit({ id, name, attribute, stats, side, row }) {
     gauge: 0,
     gaugeMax: 100,
     alive: true,
+    specialMultiplier,   // 獣魂技の威力倍率(味方のみ意味を持つ)
   };
 }
 
@@ -33,10 +36,11 @@ export function createAllyUnit(partyMember) {
   return baseUnit({
     id: monster.instanceId,
     name: monster.name,
-    attribute: monster.attribute,
+    attributes: monster.attributes,
     stats: monster.stats,
     side: 'ally',
     row,
+    specialMultiplier: getSpecialMultiplier(monster),
   });
 }
 
@@ -45,9 +49,10 @@ export function createEnemyUnit(enemyData) {
   return baseUnit({
     id: enemyData.id,
     name: enemyData.name,
-    attribute: enemyData.attribute,
+    attributes: [enemyData.attribute],
     stats: enemyData.stats,
     side: 'enemy',
     row: enemyData.row,
+    specialMultiplier: 1.8,
   });
 }
