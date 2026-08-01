@@ -1,11 +1,10 @@
 /* ============================================================
    inventory.js
-   所持アイテム管理(属性石・専用アイテム)
+   所持アイテム管理(属性石・結晶・汎用アイテム・所持金)
 
-   ※ 属性石は入手手段(探索・報酬など)が未実装のため、動作検証用に
-     初期所持数を多めに設定している。専用アイテム(異姿化用など)は
-     「特定のアイテムを使わないと異姿化できない」仕様に沿い、
-     初期所持は0個とし、探索の報酬などを通じて入手する形にする。
+   属性石(stones): 進化に使う。ショップで購入可能。
+   結晶(crystals): 異姙化合成に使う。倒したモンスターがドロップする。
+   items: タマゴなど、その他の汎用アイテム。
    ============================================================ */
 
 export class Inventory {
@@ -14,7 +13,8 @@ export class Inventory {
       fire: 20, water: 20, forest: 20, thunder: 20, ice: 20,
       earth: 20, wind: 20, light: 20, dark: 20, void: 20,
     };
-    this.items = {}; // itemId -> 所持数
+    this.crystals = {}; // attribute -> 所持数(結晶。初期は未所持)
+    this.items = {}; // itemId -> 所持数(タマゴなど)
     this.gold = 50; // 検証用の初期所持金(仮)
   }
 
@@ -43,6 +43,20 @@ export class Inventory {
   consumeStones(attribute, amount) {
     if (!this.hasStones(attribute, amount)) return false;
     this.stones[attribute] -= amount;
+    return true;
+  }
+
+  hasCrystal(attribute, amount = 1) {
+    return (this.crystals[attribute] ?? 0) >= amount;
+  }
+
+  addCrystal(attribute, amount = 1) {
+    this.crystals[attribute] = (this.crystals[attribute] ?? 0) + amount;
+  }
+
+  consumeCrystal(attribute, amount = 1) {
+    if (!this.hasCrystal(attribute, amount)) return false;
+    this.crystals[attribute] -= amount;
     return true;
   }
 
