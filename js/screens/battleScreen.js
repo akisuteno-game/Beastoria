@@ -38,6 +38,10 @@ function handleBattleEndIfNeeded() {
       getCurrentExploration().clearNode(node.id);
       state.inventory.addGold(node.goldReward ?? 0);
     }
+    // 倒した敵は、それぞれの属性の結晶を1個ドロップする
+    state.battle.enemies.forEach((enemy) => {
+      enemy.attributes.forEach((attr) => state.inventory.addCrystal(attr, 1));
+    });
     persist();
   }
 
