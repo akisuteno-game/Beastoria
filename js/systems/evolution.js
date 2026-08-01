@@ -2,45 +2,37 @@
    evolution.js
    進化システム
 
-   仕様: 全モンスターは2回進化する(計3形態)。異姿化していない
-   個体は通常ルート(evolutions.js)、異姿化済みの個体は別ルート
-   (evolutionsAlt.js)を進化元データとして参照する。
-   進化には該当属性の属性石20個を消費し、初回進化時に属性を固定する。
+   仕様: 全モンスターは2回進化する(計3形態)。進化には現在の
+   主属性(attributes[0])の属性石20個を消費する。
+   異姿化合成(属性の変化)とは独立した仕組みで、進化段階が
+   上がっても異姙化合成は引き続き行える。
    ============================================================ */
 
 import { getNextEvolutionData } from '../data/evolutions.js';
-import { getNextAltEvolutionData } from '../data/evolutionsAlt.js';
 import { recomputeStats } from './leveling.js';
 
 export const EVOLUTION_STONE_COST = 20;
 export const MAX_EVOLUTION_STAGE = 3;
 
-// 異姿化しているかどうかで、進化元データの参照先を切り替える
-function getNextEvolutionForInstance(instance) {
-  return instance.transformationStage > 0
-    ? getNextAltEvolutionData(instance.speciesId, instance.evolutionStage)
-    : getNextEvolutionData(instance.speciesId, instance.evolutionStage);
-}
-
 export function canEvolve(instance) {
   if (instance.evolutionStage >= MAX_EVOLUTION_STAGE) return false;
-  return !!getNextEvolutionForInstance(instance);
+  return !!getNextEvolutionData(instance.speciesId, instance.evolutionStage);
 }
 
 export function evolveMonster(instance, inventory) {
   if (!canEvolve(instance)) {
     return { success: false, reason: 'evolve-not-available' };
   }
-  if (!inventory.hasStones(instance.attribute, EVOLUTION_STONE_COST)) {
+  const primaryAttribute = instance.attributes[0];
+  if (!inventory.hasStones(primaryAttribute, EVOLUTION_STONE_COST)) {
     return { success: false, reason: 'not-enough-stones' };
   }
 
-  const evo = getNextEvolutionForInstance(instance);
-  inventory.consumeStones(instance.attribute, EVOLUTION_STONE_COST);
+  const evo = getNextEvolutionData(instance.speciesId, instance.evolutionStage);
+  inventory.consumeStones(primaryAttribute, EVOLUTION_STONE_COST);
 
   instance.evolutionStage = evo.stage;
   instance.name = evo.name;
-  instance.attributeLocked = true;
   instance.formGrowth = evo.statGrowth;
   recomputeStats(instance);
 
