@@ -10,10 +10,9 @@
      ボーナス行動として扱う)
    ============================================================ */
 
-import { getElementalMultiplier } from '../data/elements.js';
+import { getMultiElementalMultiplier } from '../data/elements.js';
 
 const GAUGE_PER_ACTION = 30;
-const SPECIAL_MULTIPLIER = 1.8;
 
 export class Battle {
   constructor(allyUnits, enemyUnits) {
@@ -54,7 +53,7 @@ export class Battle {
   }
 
   _applyDamage(attacker, target, multiplierBonus = 1) {
-    const elementMult = getElementalMultiplier(attacker.attribute, target.attribute);
+    const elementMult = getMultiElementalMultiplier(attacker.attributes, target.attributes);
     const raw = attacker.atk * elementMult * multiplierBonus - target.def * 0.4;
     const dmg = Math.max(1, Math.round(raw));
     target.hp = Math.max(0, target.hp - dmg);
@@ -111,7 +110,7 @@ export class Battle {
     const target = this._pickTarget('enemy');
     if (!target) return false;
 
-    const { dmg, elementMult } = this._applyDamage(unit, target, SPECIAL_MULTIPLIER);
+    const { dmg, elementMult } = this._applyDamage(unit, target, unit.specialMultiplier ?? 1.8);
     const suffix = elementMult > 1 ? '(効果は抜群だ!)' : elementMult < 1 ? '(効果は今ひとつのようだ)' : '';
     this._pushLog(`★ ${unit.name} の獣魂技が炸裂！ ${target.name} に ${dmg} ダメージ ${suffix}`);
     unit.gauge = 0;
