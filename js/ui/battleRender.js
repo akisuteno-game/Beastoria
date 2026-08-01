@@ -3,10 +3,9 @@
    バトル画面の描画(味方は左・敵は右のレイアウト)
    ============================================================ */
 
-import { ATTRIBUTES } from '../data/constants.js';
+import { renderAttrBadgesHtml } from '../utils/attrBadges.js';
 
 function buildUnitCard(unit, onUseSpecial) {
-  const attr = ATTRIBUTES[unit.attribute];
   const card = document.createElement('div');
   card.className = `unit-card panel ${unit.alive ? '' : 'unit-card--down'}`;
   card.dataset.unitId = unit.unitId;
@@ -18,7 +17,7 @@ function buildUnitCard(unit, onUseSpecial) {
   card.innerHTML = `
     <div class="unit-card__head">
       <span class="unit-card__name">${unit.name}</span>
-      <span class="attr-badge ${attr.badgeClass}">${attr.label}</span>
+      ${renderAttrBadgesHtml(unit.attributes)}
     </div>
     <div class="bar bar--hp"><div class="bar__fill" style="width:${hpPct}%"></div></div>
     <span class="bar__label">HP ${unit.hp}/${unit.maxHp}</span>
