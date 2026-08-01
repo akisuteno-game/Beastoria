@@ -8,7 +8,7 @@
    すれば毎回フルHPで始まる)。
    ============================================================ */
 
-const SAVE_KEY = 'beastoria-save-v2';
+const SAVE_KEY = 'beastoria-save-v3';
 
 export function hasSaveData() {
   try {
@@ -35,6 +35,7 @@ export function saveGame({ roster, party, inventory, explorations, currentMapId 
         row: m.row,
       })),
       stones: inventory.stones,
+      crystals: inventory.crystals,
       items: inventory.items,
       gold: inventory.gold,
       explorations: explorationsPayload,
