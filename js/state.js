@@ -89,6 +89,7 @@ export function applySaveData(data) {
 
   state.inventory = new Inventory();
   state.inventory.stones = data.stones;
+  state.inventory.crystals = data.crystals ?? {};
   state.inventory.items = data.items;
   state.inventory.gold = data.gold ?? state.inventory.gold;
 
