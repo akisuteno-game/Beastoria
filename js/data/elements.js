@@ -55,6 +55,19 @@ export function getElementalMultiplier(attackerAttr, defenderAttr) {
   return 1;
 }
 
+// 複合属性対応: 攻撃側・防御側とも属性の配列を受け取り、
+// 全組み合わせの相性を掛け合わせる(異姿化合成で属性が増えると
+// 「有利と不利が全部引き継がれる」仕様のため)。
+export function getMultiElementalMultiplier(attackerAttrs, defenderAttrs) {
+  let total = 1;
+  attackerAttrs.forEach((a) => {
+    defenderAttrs.forEach((d) => {
+      total *= getElementalMultiplier(a, d);
+    });
+  });
+  return total;
+}
+
 // デバッグ・確認用に相性ペア一覧を取り出せるようにしておく
 export function getAdvantagePairs() {
   return ADVANTAGE_PAIRS;
