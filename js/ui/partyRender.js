@@ -3,12 +3,11 @@
    パーティ編成画面の描画(前衛/後衛レーン)
    ============================================================ */
 
-import { ATTRIBUTES } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
+import { renderAttrBadgesHtml, primaryAttrColor } from '../utils/attrBadges.js';
 import { MAX_PARTY_SIZE } from '../systems/party.js';
 
 function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
-  const attr = ATTRIBUTES[monster.attribute];
   const card = document.createElement('div');
   card.className = 'party-slot party-slot--filled';
 
@@ -16,7 +15,7 @@ function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
     <div class="panel">
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
       <div class="monster-card__name">${monster.name}</div>
-      <span class="attr-badge ${attr.badgeClass}">${attr.label}属性</span>
+      ${renderAttrBadgesHtml(monster.attributes)}
       <div class="monster-card__type">Lv.${monster.level}</div>
     </div>
     <div class="party-slot__controls">
@@ -26,7 +25,7 @@ function buildMemberCard(monster, row, onToggleRow, onRemove, onDetail) {
     </div>
   `;
 
-  renderPlaceholderSprite(card.querySelector('canvas'), attr.color);
+  renderPlaceholderSprite(card.querySelector('canvas'), primaryAttrColor(monster.attributes));
 
   card.querySelector('[data-action="detail"]').addEventListener('click', () => onDetail(monster.instanceId));
   card.querySelector('[data-action="toggle"]').addEventListener('click', () => onToggleRow(monster.instanceId));
