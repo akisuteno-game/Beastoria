@@ -7,15 +7,17 @@
    ※ 必要経験値の式・成長率は仮値。バランス調整フェーズで詰める。
    ============================================================ */
 
-import { computeFinalStats } from '../utils/statUtils.js';
+import { computeFinalStats, getTransformScalar } from '../utils/statUtils.js';
 
 export function xpToNextLevel(level) {
   return level * 30;
 }
 
-// instance.formGrowth(進化・異姿化による倍率)を踏まえてステータスを再計算する
+// instance.formGrowth(進化による倍率)・レベル・異姿化合成の状態を
+// 踏まえてステータスを再計算する
 export function recomputeStats(instance) {
-  instance.stats = computeFinalStats(instance.baseStats, instance.formGrowth, instance.level);
+  const transformScalar = getTransformScalar(instance);
+  instance.stats = computeFinalStats(instance.baseStats, instance.formGrowth, instance.level, transformScalar);
 }
 
 export function addExperience(instance, amount) {
