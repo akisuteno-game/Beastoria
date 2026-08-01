@@ -2,7 +2,8 @@
    monsters.js
    モンスターデータ定義
    ※ ここでは初期スターター3体のみを実データとして持つ。
-     進化・異姿化・獣魂技などの詳細スキーマは今後のフェーズで拡張する。
+   maxTransform: このモンスターが異姿化合成で新しい属性を
+   獲得できる回数の上限(0=不可, 1〜3)。
    ============================================================ */
 
 import { computeFinalStats } from '../utils/statUtils.js';
@@ -14,23 +15,24 @@ let _instanceSeq = 0;
 export function createMonsterInstance(species) {
   _instanceSeq += 1;
   const baseStats = { ...species.baseStats };
-  const formGrowth = { hp: 1, atk: 1, def: 1, spd: 1 }; // 進化・異姿化前は等倍
+  const formGrowth = { hp: 1, atk: 1, def: 1, spd: 1 }; // 進化前は等倍
 
   return {
     instanceId: `${species.id}-${_instanceSeq}`,
     speciesId: species.id,
     name: species.name,
-    attribute: species.attribute,
+    attributes: [species.attribute], // 異姿化合成で増減する(常に1つ以上)
     role: species.role,
     rarity: species.rarity,
+    maxTransform: species.maxTransform ?? 0,
+    transformCount: 0, // これまでに「新しい属性」を獲得した回数
+    reinforceCount: 0, // 同属性結晶による強化の回数
     baseStats,
     formGrowth,
     level: 1,
     xp: 0,
     stats: computeFinalStats(baseStats, formGrowth, 1),
     evolutionStage: species.evolution.stage,
-    attributeLocked: false,
-    transformationStage: 0,
   };
 }
 
@@ -53,6 +55,7 @@ export const STARTERS = [
     attribute: 'fire',
     role: 'attack',
     rarity: 1,
+    maxTransform: 3,
     baseStats: { hp: 32, atk: 12, def: 7, spd: 9 },
     evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
@@ -62,6 +65,7 @@ export const STARTERS = [
     attribute: 'water',
     role: 'defense',
     rarity: 1,
+    maxTransform: 2,
     baseStats: { hp: 40, atk: 7, def: 11, spd: 6 },
     evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
@@ -71,6 +75,7 @@ export const STARTERS = [
     attribute: 'forest',
     role: 'support',
     rarity: 1,
+    maxTransform: 1,
     baseStats: { hp: 30, atk: 6, def: 8, spd: 10 },
     evolution: { stage: 1, maxStage: 3, stoneCost: 20 },
   },
