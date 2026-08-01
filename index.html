@@ -178,6 +178,31 @@
   </div>
 </div>
 
+<script>
+  // 開発者ツールが使えない環境(iPad等)でもエラーが見えるように、
+  // 画面上に直接表示する。
+  function showOnScreenError(message) {
+    let box = document.getElementById('debug-error-box');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'debug-error-box';
+      box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1a0000;color:#ffb3b3;' +
+        'font-family:monospace;font-size:13px;padding:16px;overflow:auto;white-space:pre-wrap;' +
+        'line-height:1.5;';
+      document.body.appendChild(box);
+    }
+    const line = document.createElement('div');
+    line.style.cssText = 'border-bottom:1px solid #552222;padding-bottom:8px;margin-bottom:8px;';
+    line.textContent = message;
+    box.appendChild(line);
+  }
+  window.addEventListener('error', (e) => {
+    showOnScreenError('[error] ' + e.message + '\n' + (e.filename || '') + ':' + (e.lineno || '') + ':' + (e.colno || ''));
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    showOnScreenError('[unhandledrejection] ' + (e.reason && e.reason.stack ? e.reason.stack : e.reason));
+  });
+</script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
