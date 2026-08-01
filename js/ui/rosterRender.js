@@ -3,17 +3,19 @@
    所持モンスター一覧・簡易図鑑の描画
    ============================================================ */
 
-import { ATTRIBUTES, rarityToStars } from '../data/constants.js';
+import { rarityToStars } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
+import { renderAttrBadgesHtml, primaryAttrColor } from '../utils/attrBadges.js';
 
 function stageLabel(instance) {
-  const branch = instance.transformationStage > 0 ? '異姿化ルート' : '通常ルート';
-  if (instance.evolutionStage >= 2) return `${branch} 進化${instance.evolutionStage - 1}段階`;
-  return instance.transformationStage > 0 ? '異姿化(基本形)' : '基本形態';
+  const evoLabel = instance.evolutionStage >= 2 ? `進化${instance.evolutionStage - 1}段階` : '基本形態';
+  const parts = [evoLabel];
+  if (instance.attributes.length > 1) parts.push(`複合属性×${instance.attributes.length}`);
+  if (instance.reinforceCount > 0) parts.push(`強化${instance.reinforceCount}`);
+  return parts.join(' ・ ');
 }
 
 function buildOwnedCard(instance, onSelect) {
-  const attr = ATTRIBUTES[instance.attribute];
   const card = document.createElement('div');
   card.className = 'monster-card';
 
@@ -21,13 +23,13 @@ function buildOwnedCard(instance, onSelect) {
     <div class="panel">
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
       <div class="monster-card__name">${instance.name}</div>
-      <span class="attr-badge ${attr.badgeClass}">${attr.label}属性</span>
+      ${renderAttrBadgesHtml(instance.attributes)}
       <div class="monster-card__type">Lv.${instance.level} ・ ${stageLabel(instance)}</div>
       <div class="rarity">${rarityToStars(instance.rarity)}</div>
     </div>
   `;
 
-  renderPlaceholderSprite(card.querySelector('canvas'), attr.color);
+  renderPlaceholderSprite(card.querySelector('canvas'), primaryAttrColor(instance.attributes));
   card.addEventListener('click', () => onSelect(instance.instanceId));
 
   return card;
