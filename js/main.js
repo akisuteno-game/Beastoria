@@ -41,4 +41,14 @@ function init() {
   setupBattleScreen();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    init();
+  } catch (e) {
+    if (window.__showOnScreenError) {
+      window.__showOnScreenError('[init()内でエラー] ' + e.message + '\n' + (e.stack || ''));
+    } else {
+      console.error(e);
+    }
+  }
+});
