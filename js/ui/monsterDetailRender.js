@@ -1,37 +1,56 @@
 /* ============================================================
    monsterDetailRender.js
-   モンスター詳細画面の描画(進化・異姿化の操作を含む)
-
-   ※ 異姿化は「専用アイテムを実際に持っている場合」だけセクションを
-     表示する。持っていない段階で存在をほのめかすと、進化のように
-     見えて面白くなくなるため、UI上ではあえて何も出さない。
+   モンスター詳細画面の描画(進化・異姙化合成の操作を含む)
    ============================================================ */
 
 import { ATTRIBUTES, rarityToStars, ROLE_LABEL } from '../data/constants.js';
 import { renderPlaceholderSprite } from '../utils/spriteGen.js';
+import { renderAttrBadgesHtml, primaryAttrColor } from '../utils/attrBadges.js';
 import { canEvolve, EVOLUTION_STONE_COST, MAX_EVOLUTION_STAGE } from '../systems/evolution.js';
-import { canTransform, hasTransformationItemReady } from '../systems/transformation.js';
-import { xpToNextLevel } from '../systems/leveling.js';
+import { canGainNewAttribute } from '../systems/transformSynthesis.js';
+
+function buildSynthesisList(instance, inventory) {
+  const ownedCrystalAttrs = Object.keys(inventory.crystals).filter((a) => inventory.crystals[a] > 0);
+
+  if (ownedCrystalAttrs.length === 0) {
+    return `<p class="detail-note">結晶を持っていません。バトルで敵を倒すとドロップします。</p>`;
+  }
+
+  return ownedCrystalAttrs
+    .map((attrId) => {
+      const attr = ATTRIBUTES[attrId];
+      const already = instance.attributes.includes(attrId);
+      const capReached = !already && !canGainNewAttribute(instance);
+      const disabled = capReached;
+      const actionLabel = already ? '強化する' : '新属性として合成';
+
+      return `
+        <div class="panel synthesis-item">
+          <span class="attr-badge ${attr.badgeClass}">${attr.label}の結晶</span>
+          <div class="shop-item__stock">所持: ${inventory.crystals[attrId]}個</div>
+          <div class="detail-note">${already ? 'ステータス・獣魂技を強化' : capReached ? 'これ以上は異姙化できません' : '新しい属性を獲得(複合属性化)'}</div>
+          <button class="btn btn--sm ${disabled ? 'btn--ghost' : ''}" data-attr="${attrId}" ${disabled ? 'disabled' : ''}>${actionLabel}</button>
+        </div>
+      `;
+    })
+    .join('');
+}
 
 export function renderMonsterDetail(container, instance, inventory, handlers) {
-  const attr = ATTRIBUTES[instance.attribute];
-
   const evolveOk = canEvolve(instance);
-  const stoneCount = inventory.stones[instance.attribute] ?? 0;
+  const primaryAttribute = instance.attributes[0];
+  const stoneAttr = ATTRIBUTES[primaryAttribute];
+  const stoneCount = inventory.stones[primaryAttribute] ?? 0;
   const stoneOk = stoneCount >= EVOLUTION_STONE_COST;
 
-  const alreadyTransformed = instance.transformationStage > 0;
-  const transformReady = !alreadyTransformed && hasTransformationItemReady(instance, inventory);
-  const showTransformSection = alreadyTransformed || transformReady;
-
-  const xpNeeded = xpToNextLevel(instance.level);
+  const xpNeeded = instance.level * 30;
   const xpPct = Math.round((instance.xp / xpNeeded) * 100);
 
   container.innerHTML = `
     <div class="panel panel--raised monster-detail__main">
       <canvas class="monster-card__sprite" width="64" height="64"></canvas>
       <div class="monster-card__name" style="font-size: var(--fs-lg);">${instance.name}</div>
-      <span class="attr-badge ${attr.badgeClass}">${attr.label}属性${instance.attributeLocked ? '(固定)' : ''}</span>
+      ${renderAttrBadgesHtml(instance.attributes)}
       <div class="monster-card__type">${ROLE_LABEL[instance.role]}</div>
       <div class="rarity">${rarityToStars(instance.rarity)}</div>
 
@@ -51,32 +70,28 @@ export function renderMonsterDetail(container, instance, inventory, handlers) {
       <h3 class="section-title">進化 (${instance.evolutionStage} / ${MAX_EVOLUTION_STAGE})</h3>
       ${
         evolveOk
-          ? `<p class="detail-note">${attr.stoneName} ${EVOLUTION_STONE_COST}個が必要(所持: ${stoneCount}個)</p>
+          ? `<p class="detail-note">${stoneAttr.stoneName} ${EVOLUTION_STONE_COST}個が必要(所持: ${stoneCount}個)</p>
              <button id="evolve-btn" class="btn ${stoneOk ? '' : 'btn--ghost'}" ${stoneOk ? '' : 'disabled'}>進化させる</button>`
           : `<p class="detail-note">${instance.evolutionStage >= MAX_EVOLUTION_STAGE ? 'これ以上は進化しません' : '進化データがありません'}</p>`
       }
     </div>
 
-    ${
-      showTransformSection
-        ? `<div class="panel monster-detail__section">
-             <h3 class="section-title">異姿化</h3>
-             ${
-               alreadyTransformed
-                 ? `<p class="detail-note">この個体はすでに異姿化しています。以後は異姿化後専用の進化ルートを歩みます。</p>`
-                 : `<p class="detail-note">専用のアイテムを使うと、姿が変わるようだ…</p>
-                    <button id="transform-btn" class="btn">アイテムを使う</button>`
-             }
-           </div>`
-        : ''
-    }
+    <div class="panel monster-detail__section">
+      <h3 class="section-title">異姙化合成 (${instance.transformCount} / ${instance.maxTransform})${instance.reinforceCount > 0 ? ` ・ 強化${instance.reinforceCount}回` : ''}</h3>
+      ${
+        instance.maxTransform === 0
+          ? `<p class="detail-note">このモンスターは異姙化合成に対応していません</p>`
+          : buildSynthesisList(instance, inventory)
+      }
+    </div>
   `;
 
-  renderPlaceholderSprite(container.querySelector('canvas'), attr.color);
+  renderPlaceholderSprite(container.querySelector('canvas'), primaryAttrColor(instance.attributes));
 
   const evolveBtn = container.querySelector('#evolve-btn');
   if (evolveBtn) evolveBtn.addEventListener('click', () => handlers.onEvolve(instance.instanceId));
 
-  const transformBtn = container.querySelector('#transform-btn');
-  if (transformBtn) transformBtn.addEventListener('click', () => handlers.onTransform(instance.instanceId));
+  container.querySelectorAll('.synthesis-item button[data-attr]').forEach((btn) => {
+    btn.addEventListener('click', () => handlers.onSynthesize(instance.instanceId, btn.dataset.attr));
+  });
 }
