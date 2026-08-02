@@ -202,6 +202,31 @@
   window.addEventListener('unhandledrejection', (e) => {
     showOnScreenError('[unhandledrejection] ' + (e.reason && e.reason.stack ? e.reason.stack : e.reason));
   });
+  window.__showOnScreenError = showOnScreenError;
+
+  // 見張り役: 3秒経ってもどの画面も表示されていなければ、
+  // (エラーが投げられていなくても)診断情報を強制的に表示する。
+  setTimeout(() => {
+    var active = document.querySelector('.screen.is-active');
+    if (active) return; // 正常に表示されていれば何もしない
+
+    var frame = document.getElementById('viewport-frame');
+    var frameStyle = frame ? getComputedStyle(frame) : null;
+    var info = [
+      '3秒経っても画面が切り替わりませんでした。診断情報:',
+      'window.innerWidth/innerHeight: ' + window.innerWidth + ' / ' + window.innerHeight,
+      'devicePixelRatio: ' + window.devicePixelRatio,
+      '#viewport-frame transform: ' + (frameStyle ? frameStyle.transform : '(要素が見つからない)'),
+      '#viewport-frame width/height(style属性): ' + (frame ? frame.style.width + ' / ' + frame.style.height : '(要素が見つからない)'),
+      '.screen要素の数: ' + document.querySelectorAll('.screen').length,
+      'localStorage使用可否: ' + (function () {
+        try { window.localStorage.setItem('__test', '1'); window.localStorage.removeItem('__test'); return 'OK'; }
+        catch (e) { return 'NG: ' + e.message; }
+      })(),
+      'userAgent: ' + navigator.userAgent,
+    ].join('\n');
+    showOnScreenError(info);
+  }, 3000);
 </script>
 <script type="module" src="js/main.js"></script>
 </body>
