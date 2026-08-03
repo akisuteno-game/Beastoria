@@ -14,6 +14,14 @@ import { getMultiElementalMultiplier } from '../data/elements.js';
 
 const GAUGE_PER_ACTION = 30;
 
+// 属性相性のログ表記(既存の有名タイトルの言い回しと被らないよう、
+// ビーストリア独自の表現にしている)
+function elementalSuffix(mult) {
+  if (mult >= 2) return '(属性の連鎖が炸裂!)';
+  if (mult > 1) return '(属性の相性が噛み合った!)';
+  return '';
+}
+
 export class Battle {
   constructor(allyUnits, enemyUnits) {
     this.allies = allyUnits;
@@ -70,8 +78,7 @@ export class Battle {
     if (!target) return;
 
     const { dmg, elementMult } = this._applyDamage(unit, target);
-    const suffix = elementMult > 1 ? '(効果は抜群だ!)' : elementMult < 1 ? '(効果は今ひとつのようだ)' : '';
-    this._pushLog(`${unit.name} の攻撃! ${target.name} に ${dmg} ダメージ ${suffix}`);
+    this._pushLog(`${unit.name} の攻撃! ${target.name} に ${dmg} ダメージ ${elementalSuffix(elementMult)}`);
 
     if (unit.side === 'ally') {
       unit.gauge = Math.min(unit.gaugeMax, unit.gauge + GAUGE_PER_ACTION);
@@ -111,8 +118,8 @@ export class Battle {
     if (!target) return false;
 
     const { dmg, elementMult } = this._applyDamage(unit, target, unit.specialMultiplier ?? 1.8);
-    const suffix = elementMult > 1 ? '(効果は抜群だ!)' : elementMult < 1 ? '(効果は今ひとつのようだ)' : '';
-    this._pushLog(`★ ${unit.name} の獣魂技が炸裂！ ${target.name} に ${dmg} ダメージ ${suffix}`);
+    const moveName = unit.specialName ?? '獣魂技';
+    this._pushLog(`★ ${unit.name} の「${moveName}」が炸裂！ ${target.name} に ${dmg} ダメージ ${elementalSuffix(elementMult)}`);
     unit.gauge = 0;
     if (!target.alive) {
       this._pushLog(`${target.name} を倒した！`);
