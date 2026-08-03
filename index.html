@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/layout/party.css">
 <link rel="stylesheet" href="css/layout/battle.css">
 <link rel="stylesheet" href="css/layout/map.css">
+<link rel="stylesheet" href="css/layout/tablet.css">
 
 <link rel="stylesheet" href="css/components/panel.css">
 <link rel="stylesheet" href="css/components/buttons.css">
@@ -22,6 +23,7 @@
 <link rel="stylesheet" href="css/components/detail.css">
 <link rel="stylesheet" href="css/components/map.css">
 <link rel="stylesheet" href="css/components/map-select.css">
+<link rel="stylesheet" href="css/components/save.css">
 <link rel="stylesheet" href="css/components/shop.css">
 <link rel="stylesheet" href="css/components/egg.css">
 </head>
@@ -43,6 +45,15 @@
         </div>
       </section>
 
+      <!-- ロード画面 -->
+      <section class="screen" data-screen="load">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">つづきから</h2>
+          <button id="load-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+        <div id="load-slot-list" style="overflow-y: auto;"></div>
+      </section>
+
       <!-- ホーム画面(スターター選択) -->
       <section class="screen" data-screen="home">
         <div class="top-bar">
@@ -61,7 +72,8 @@
       <section class="screen" data-screen="party">
         <div class="top-bar">
           <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
-          <div style="display:flex; gap: var(--space-1);">
+          <div style="display:flex; gap: var(--space-1); flex-wrap: wrap; justify-content: flex-end;">
+            <button id="save-open-btn" class="btn btn--ghost btn--sm">セーブ</button>
             <button id="egg-open-btn" class="btn btn--ghost btn--sm">タマゴ</button>
             <button id="shop-open-btn" class="btn btn--ghost btn--sm">商店</button>
             <button id="roster-open-btn" class="btn btn--ghost btn--sm">図鑑</button>
@@ -144,6 +156,15 @@
         <div id="egg-body" style="overflow-y: auto;"></div>
       </section>
 
+      <!-- セーブ画面 -->
+      <section class="screen" data-screen="save">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">セーブ</h2>
+          <button id="save-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+        <div id="save-slot-list" style="overflow-y: auto;"></div>
+      </section>
+
       <!-- モンスター詳細画面(進化・異姿化) -->
       <section class="screen" data-screen="monster-detail">
         <div class="top-bar">
@@ -166,7 +187,10 @@
           <div id="battle-enemy-lane" class="battle-lane battle-lane--enemy"></div>
         </div>
 
-        <div id="battle-log" class="battle-log"></div>
+        <div class="battle-bottom-bar">
+          <div id="battle-log" class="battle-log"></div>
+          <div id="battle-special-panel" class="battle-special-panel"></div>
+        </div>
 
         <div class="screen-footer">
           <button id="battle-back-btn" class="btn" style="display:none;">パーティ編成へ戻る</button>
