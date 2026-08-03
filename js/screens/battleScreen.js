@@ -9,14 +9,17 @@ import { createAllyUnit, createEnemyUnit } from '../systems/battleUnit.js';
 import { addExperience } from '../systems/leveling.js';
 import { renderBattle } from '../ui/battleRender.js';
 import { refreshMapScreen } from './mapScreen.js';
+import { BASIC_EGG } from '../data/eggs.js';
 
 const BATTLE_TICK_MS = 1200;
+const EGG_DROP_CHANCE = 0.05; // 敵1体につき5%の確率でタマゴをドロップ
 
 function refreshBattleScreen() {
   renderBattle(
     document.querySelector('#battle-ally-lane'),
     document.querySelector('#battle-enemy-lane'),
     document.querySelector('#battle-log'),
+    document.querySelector('#battle-special-panel'),
     state.battle,
     (unitId) => {
       state.battle.useSpecial(unitId);
@@ -38,15 +41,25 @@ function handleBattleEndIfNeeded() {
       getCurrentExploration().clearNode(node.id);
       state.inventory.addGold(node.goldReward ?? 0);
     }
-    // 倒した敵は、それぞれの属性の結晶を1個ドロップする
+    // 倒した敵は、それぞれの属性の結晶を1個ドロップする。
+    // ごく低確率でタマゴも一緒にドロップする。
+    let eggDropped = 0;
     state.battle.enemies.forEach((enemy) => {
       enemy.attributes.forEach((attr) => state.inventory.addCrystal(attr, 1));
+      if (Math.random() < EGG_DROP_CHANCE) {
+        state.inventory.addItem(BASIC_EGG.id, 1);
+        eggDropped += 1;
+      }
     });
+    if (eggDropped > 0) {
+      state.battle.log.push(`不思議な予感…${BASIC_EGG.name}を${eggDropped}個手に入れた!`);
+    }
     persist();
   }
 
   document.querySelector('#battle-back-btn').style.display = '';
   document.querySelector('#battle-pause-btn').style.display = 'none';
+  refreshBattleScreen();
 }
 
 function startBattleLoop() {
