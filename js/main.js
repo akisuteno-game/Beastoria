@@ -11,6 +11,8 @@ import { ScreenManager } from './systems/screens.js';
 import { initViewportScale } from './systems/viewport.js';
 
 import { setup as setupTitleScreen } from './screens/titleScreen.js';
+import { setup as setupLoadScreen } from './screens/loadScreen.js';
+import { setup as setupSaveScreen } from './screens/saveScreen.js';
 import { setup as setupHomeScreen } from './screens/homeScreen.js';
 import { setup as setupPartyScreen } from './screens/partyScreen.js';
 import { setup as setupPartyAddScreen } from './screens/partyAddScreen.js';
@@ -29,6 +31,8 @@ function init() {
   state.screens.show('title');
 
   setupTitleScreen();
+  setupLoadScreen();
+  setupSaveScreen();
   setupHomeScreen();
   setupPartyScreen();
   setupPartyAddScreen();
