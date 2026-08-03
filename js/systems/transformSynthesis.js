@@ -18,6 +18,7 @@
    ============================================================ */
 
 import { recomputeStats } from './leveling.js';
+import { getSpecialMove } from '../data/specialMoves.js';
 
 export const REINFORCE_SPECIAL_BONUS = 0.1; // 同属性強化1回ごとの獣魂技威力ボーナス
 
@@ -25,9 +26,10 @@ export function canGainNewAttribute(instance) {
   return instance.transformCount < instance.maxTransform;
 }
 
-// 獣魂技の威力倍率(同属性強化で上昇する)
+// 獣魂技の威力倍率(種族ごとの技の基礎威力 + 同属性強化での上昇分)
 export function getSpecialMultiplier(instance) {
-  return 1.8 + REINFORCE_SPECIAL_BONUS * instance.reinforceCount;
+  const move = getSpecialMove(instance.speciesId);
+  return move.multiplier + REINFORCE_SPECIAL_BONUS * instance.reinforceCount;
 }
 
 /**
