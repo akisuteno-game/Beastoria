@@ -3,13 +3,13 @@
    タイトル画面(はじめる・つづきから)
    ============================================================ */
 
-import { state, showScreen, applySaveData } from '../state.js';
-import { hasSaveData, loadSaveData } from '../systems/saveLoad.js';
-import { refreshPartyScreen } from './partyScreen.js';
+import { showScreen } from '../state.js';
+import { SAVE_SLOTS, hasSaveData } from '../systems/saveLoad.js';
+import { refreshLoadScreen } from './loadScreen.js';
 
 export function setup() {
   const continueBtn = document.querySelector('#continue-btn');
-  if (hasSaveData()) {
+  if (SAVE_SLOTS.some((slot) => hasSaveData(slot))) {
     continueBtn.style.display = '';
   }
 
@@ -18,10 +18,7 @@ export function setup() {
   });
 
   continueBtn.addEventListener('click', () => {
-    const data = loadSaveData();
-    if (!data) return;
-    applySaveData(data);
-    refreshPartyScreen();
-    showScreen('party');
+    refreshLoadScreen();
+    showScreen('load');
   });
 }
