@@ -64,9 +64,21 @@ export function isMapUnlocked(mapId) {
   return state.explorations[prevMapId].cleared.has(bossNode.id);
 }
 
-// 主要なアクションのたびに呼び、進行状況を保存する
+// バトル後・編成変更後など、主要なアクションのたびに呼び、
+// オートセーブ枠に自動で保存する
 export function persist() {
-  saveGame({
+  saveGame('auto', {
+    roster: state.roster,
+    party: state.party,
+    inventory: state.inventory,
+    explorations: state.explorations,
+    currentMapId: state.currentMapId,
+  });
+}
+
+// 指定したスロットへ手動保存する(セーブ画面から呼ぶ)
+export function persistToSlot(slot) {
+  return saveGame(slot, {
     roster: state.roster,
     party: state.party,
     inventory: state.inventory,
