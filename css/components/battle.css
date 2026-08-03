@@ -1,65 +1,57 @@
 /* ============================================================
-   battle.css
-   バトルユニットカード・各種バー(HP/獣魂技ゲージ/EXP)
+   battle.css (layout)
+   バトル画面: 上=味方(左)/敵(右)のバトルフィールド、
+   下段は左にログ・中央〜右に獣魂技の操作パネル。
    ============================================================ */
 
-.unit-card {
-  width: 100%;
-  padding: var(--space-2);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.unit-card--down {
-  opacity: 0.4;
-}
-
-.unit-card__head {
+.battle-arena {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 0;
 }
 
-.unit-card__name {
-  font-family: var(--font-display);
-  font-size: var(--fs-sm);
+.battle-lane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 47%;
+  overflow-y: auto;
 }
 
-.unit-card__ko {
-  font-size: var(--fs-xs);
-  color: var(--color-fire);
+.battle-lane--enemy {
+  align-items: flex-end;
 }
 
-.bar {
-  height: 8px;
-  background: var(--color-void);
-  border: 1px solid var(--color-line);
+.battle-bottom-bar {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  border-top: 2px solid var(--color-line);
+  padding-top: var(--space-2);
+  min-height: 110px;
 }
 
-.bar__fill {
-  height: 100%;
-  background: var(--color-forest);
-  transition: width 0.2s ease;
-}
-
-.bar--gauge .bar__fill {
-  background: var(--color-gold);
-}
-
-.bar--xp .bar__fill {
-  background: var(--color-water);
-}
-
-.bar__label {
+.battle-log {
+  width: 42%;
+  height: 110px;
+  overflow-y: auto;
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: var(--fs-xs);
   color: var(--color-parchment-dim);
 }
 
-.detail-level {
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  color: var(--color-gold);
-  margin-top: var(--space-1);
+.battle-log__line {
+  padding: 2px 0;
+}
+
+.battle-special-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-align: center;
 }
