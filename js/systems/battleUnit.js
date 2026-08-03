@@ -6,10 +6,11 @@
    ============================================================ */
 
 import { getSpecialMultiplier } from './transformSynthesis.js';
+import { getSpecialMove } from '../data/specialMoves.js';
 
 let _unitSeq = 0;
 
-function baseUnit({ id, name, attributes, stats, side, row, specialMultiplier }) {
+function baseUnit({ id, name, attributes, stats, side, row, specialMultiplier, specialName, specialDescription }) {
   _unitSeq += 1;
   return {
     unitId: `unit-${_unitSeq}`,
@@ -26,13 +27,16 @@ function baseUnit({ id, name, attributes, stats, side, row, specialMultiplier })
     gauge: 0,
     gaugeMax: 100,
     alive: true,
-    specialMultiplier,   // 獣魂技の威力倍率(味方のみ意味を持つ)
+    specialMultiplier,    // 獣魂技の威力倍率(味方のみ意味を持つ)
+    specialName,          // 獣魂技の名前
+    specialDescription,   // 獣魂技の説明
   };
 }
 
 // パーティメンバー(所持モンスターのインスタンス)から味方ユニットを生成
 export function createAllyUnit(partyMember) {
   const { monster, row } = partyMember;
+  const move = getSpecialMove(monster.speciesId);
   return baseUnit({
     id: monster.instanceId,
     name: monster.name,
@@ -41,6 +45,8 @@ export function createAllyUnit(partyMember) {
     side: 'ally',
     row,
     specialMultiplier: getSpecialMultiplier(monster),
+    specialName: move.name,
+    specialDescription: move.description,
   });
 }
 
@@ -54,5 +60,7 @@ export function createEnemyUnit(enemyData) {
     side: 'enemy',
     row: enemyData.row,
     specialMultiplier: 1.8,
+    specialName: '獣魂技',
+    specialDescription: '',
   });
 }
