@@ -21,6 +21,7 @@ export function createMonsterInstance(species) {
   return {
     instanceId: `${species.id}-${_instanceSeq}`,
     speciesId: species.id,
+    coreName: species.name, // 進化段階の「素の名前」(異姙化パーツを付ける前)
     name: species.name,
     attributes: [species.attribute], // 異姿化合成で増減する(常に1つ以上)
     role: species.role,
