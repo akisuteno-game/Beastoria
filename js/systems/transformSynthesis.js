@@ -19,6 +19,7 @@
 
 import { recomputeStats } from './leveling.js';
 import { getSpecialMove } from '../data/specialMoves.js';
+import { updateDisplayName } from './nameDisplay.js';
 
 export const REINFORCE_SPECIAL_BONUS = 0.1; // 同属性強化1回ごとの獣魂技威力ボーナス
 
@@ -63,6 +64,7 @@ export function synthesizeCrystal(instance, crystalAttribute, inventory) {
   instance.attributes = [...instance.attributes, crystalAttribute];
   instance.transformCount += 1;
 
+  updateDisplayName(instance);
   recomputeStats(instance);
   return { success: true, kind: 'new-attribute' };
 }
