@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ビーストリア</title>
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+
+<link rel="stylesheet" href="css/layout/screen.css">
+<link rel="stylesheet" href="css/layout/party.css">
+<link rel="stylesheet" href="css/layout/battle.css">
+<link rel="stylesheet" href="css/layout/map.css">
+<link rel="stylesheet" href="css/layout/tablet.css">
+
+<link rel="stylesheet" href="css/components/panel.css">
+<link rel="stylesheet" href="css/components/buttons.css">
+<link rel="stylesheet" href="css/components/badges.css">
+<link rel="stylesheet" href="css/components/monster-card.css">
+<link rel="stylesheet" href="css/components/party.css">
+<link rel="stylesheet" href="css/components/battle.css">
+<link rel="stylesheet" href="css/components/detail.css">
+<link rel="stylesheet" href="css/components/map.css">
+<link rel="stylesheet" href="css/components/map-select.css">
+<link rel="stylesheet" href="css/components/save.css">
+<link rel="stylesheet" href="css/components/shop.css">
+<link rel="stylesheet" href="css/components/egg.css">
+</head>
+<body>
+
+<div id="viewport-stage">
+  <div id="viewport-frame">
+
+    <div id="game-root">
+
+      <!-- タイトル画面 -->
+      <section class="screen" data-screen="title" style="justify-content:center; align-items:center;">
+        <h1 class="logo">ビーストリア
+          <span class="logo__sub">BEASTORIA</span>
+        </h1>
+        <div style="margin-top: var(--space-5); display:flex; flex-direction:column; gap: var(--space-2); align-items:center;">
+          <button id="start-btn" class="btn">はじめる</button>
+          <button id="continue-btn" class="btn btn--ghost" style="display:none;">つづきから</button>
+        </div>
+      </section>
+
+      <!-- ロード画面 -->
+      <section class="screen" data-screen="load">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">つづきから</h2>
+          <button id="load-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+        <div id="load-slot-list" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- ホーム画面(スターター選択) -->
+      <section class="screen" data-screen="home">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">最初の仲間を選ぼう</h2>
+          <span class="top-bar__label">STEP 1 / 1</span>
+        </div>
+
+        <div id="starter-grid" class="starter-grid"></div>
+
+        <div class="screen-footer">
+          <button id="confirm-starter-btn" class="btn" disabled>モンスターを選択してください</button>
+        </div>
+      </section>
+
+      <!-- パーティ編成画面 -->
+      <section class="screen" data-screen="party">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">パーティ編成</h2>
+          <div style="display:flex; gap: var(--space-1); flex-wrap: wrap; justify-content: flex-end;">
+            <button id="save-open-btn" class="btn btn--ghost btn--sm">セーブ</button>
+            <button id="egg-open-btn" class="btn btn--ghost btn--sm">タマゴ</button>
+            <button id="shop-open-btn" class="btn btn--ghost btn--sm">商店</button>
+            <button id="roster-open-btn" class="btn btn--ghost btn--sm">図鑑</button>
+          </div>
+        </div>
+
+        <div class="party-lane">
+          <span class="party-lane__label">前衛 FRONT(先に狙われる・攻撃力UP)</span>
+          <div id="party-front" class="party-lane__row"></div>
+        </div>
+
+        <div class="party-lane">
+          <span class="party-lane__label">後衛 BACK / 空き枠(狙われにくい・被ダメ軽減)</span>
+          <div id="party-back" class="party-lane__row"></div>
+        </div>
+
+        <div class="screen-footer">
+          <button id="party-done-btn" class="btn">編成を確定して探索へ</button>
+        </div>
+      </section>
+
+      <!-- パーティへ追加(空き枠から所持モンスターを選ぶ) -->
+      <section class="screen" data-screen="party-add">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">仲間を選ぶ</h2>
+          <button id="party-add-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="party-add-grid" class="starter-grid" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- マップ選択画面 -->
+      <section class="screen" data-screen="map-select">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">マップを選ぶ</h2>
+          <button id="map-select-party-btn" class="btn btn--ghost btn--sm">編成へ</button>
+        </div>
+
+        <div id="map-select-list" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- 探索マップ画面 -->
+      <section class="screen" data-screen="map">
+        <div class="top-bar">
+          <h2 id="map-title" style="font-size: var(--fs-lg);">探索</h2>
+          <button id="map-select-btn" class="btn btn--ghost btn--sm">マップ選択</button>
+        </div>
+
+        <div id="map-path" class="map-path"></div>
+      </section>
+
+      <!-- 所持モンスター一覧・図鑑画面 -->
+      <section class="screen" data-screen="roster">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">図鑑</h2>
+          <button id="roster-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="roster-grid" class="starter-grid" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- 商店画面 -->
+      <section class="screen" data-screen="shop">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">商店</h2>
+          <button id="shop-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="shop-gold" class="shop-gold"></div>
+        <div id="shop-list" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- タマゴ孵化画面 -->
+      <section class="screen" data-screen="egg">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">タマゴ</h2>
+          <button id="egg-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="egg-body" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- セーブ画面 -->
+      <section class="screen" data-screen="save">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">セーブ</h2>
+          <button id="save-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+        <div id="save-slot-list" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- モンスター詳細画面(進化・異姿化) -->
+      <section class="screen" data-screen="monster-detail">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">モンスター詳細</h2>
+          <button id="detail-back-btn" class="btn btn--ghost btn--sm">戻る</button>
+        </div>
+
+        <div id="monster-detail-body" style="overflow-y: auto;"></div>
+      </section>
+
+      <!-- バトル画面 -->
+      <section class="screen" data-screen="battle">
+        <div class="top-bar">
+          <h2 style="font-size: var(--fs-lg);">バトル</h2>
+          <button id="battle-pause-btn" class="btn btn--ghost btn--sm">一時停止</button>
+        </div>
+
+        <div class="battle-arena">
+          <div id="battle-ally-lane" class="battle-lane"></div>
+          <div id="battle-enemy-lane" class="battle-lane battle-lane--enemy"></div>
+        </div>
+
+        <div class="battle-bottom-bar">
+          <div id="battle-log" class="battle-log"></div>
+          <div id="battle-special-panel" class="battle-special-panel"></div>
+        </div>
+
+        <div class="screen-footer">
+          <button id="battle-back-btn" class="btn" style="display:none;">パーティ編成へ戻る</button>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // 開発者ツールが使えない環境(iPad等)でもエラーが見えるように、
+  // 画面上に直接表示する。
+  function showOnScreenError(message) {
+    let box = document.getElementById('debug-error-box');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'debug-error-box';
+      box.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#1a0000;color:#ffb3b3;' +
+        'font-family:monospace;font-size:13px;padding:16px;overflow:auto;white-space:pre-wrap;' +
+        'line-height:1.5;';
+      document.body.appendChild(box);
+    }
+    const line = document.createElement('div');
+    line.style.cssText = 'border-bottom:1px solid #552222;padding-bottom:8px;margin-bottom:8px;';
+    line.textContent = message;
+    box.appendChild(line);
+  }
+  window.addEventListener('error', (e) => {
+    showOnScreenError('[error] ' + e.message + '\n' + (e.filename || '') + ':' + (e.lineno || '') + ':' + (e.colno || ''));
+  });
+  window.addEventListener('unhandledrejection', (e) => {
+    showOnScreenError('[unhandledrejection] ' + (e.reason && e.reason.stack ? e.reason.stack : e.reason));
+  });
+  window.__showOnScreenError = showOnScreenError;
+
+  // 見張り役: 3秒経ってもどの画面も表示されていなければ、
+  // (エラーが投げられていなくても)診断情報を強制的に表示する。
+  setTimeout(() => {
+    var active = document.querySelector('.screen.is-active');
+    if (active) return; // 正常に表示されていれば何もしない
+
+    var frame = document.getElementById('viewport-frame');
+    var frameStyle = frame ? getComputedStyle(frame) : null;
+    var info = [
+      '3秒経っても画面が切り替わりませんでした。診断情報:',
+      'window.innerWidth/innerHeight: ' + window.innerWidth + ' / ' + window.innerHeight,
+      'devicePixelRatio: ' + window.devicePixelRatio,
+      '#viewport-frame transform: ' + (frameStyle ? frameStyle.transform : '(要素が見つからない)'),
+      '#viewport-frame width/height(style属性): ' + (frame ? frame.style.width + ' / ' + frame.style.height : '(要素が見つからない)'),
+      '.screen要素の数: ' + document.querySelectorAll('.screen').length,
+      'localStorage使用可否: ' + (function () {
+        try { window.localStorage.setItem('__test', '1'); window.localStorage.removeItem('__test'); return 'OK'; }
+        catch (e) { return 'NG: ' + e.message; }
+      })(),
+      'userAgent: ' + navigator.userAgent,
+    ].join('\n');
+    showOnScreenError(info);
+  }, 3000);
+</script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
