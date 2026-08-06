@@ -1,0 +1,34 @@
+/* ============================================================
+   badges.css
+   レア度(★/✦)・属性バッジ
+   ============================================================ */
+
+.rarity {
+  font-family: var(--font-mono);
+  color: var(--color-gold);
+  font-size: var(--fs-sm);
+  letter-spacing: 1px;
+}
+
+.attr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  padding: 2px var(--space-2);
+  border-radius: 2px;
+  color: var(--color-void);
+  font-weight: bold;
+}
+
+.attr-badge--fire    { background: var(--color-fire); }
+.attr-badge--water   { background: var(--color-water); }
+.attr-badge--forest  { background: var(--color-forest); }
+.attr-badge--thunder { background: var(--color-thunder); }
+.attr-badge--ice     { background: var(--color-ice); }
+.attr-badge--earth   { background: var(--color-earth); color: var(--color-parchment); }
+.attr-badge--wind    { background: var(--color-wind); }
+.attr-badge--light   { background: var(--color-light); }
+.attr-badge--dark    { background: var(--color-dark); color: var(--color-parchment); }
+.attr-badge--void    { background: var(--color-attr-void); }

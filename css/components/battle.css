@@ -1,0 +1,98 @@
+/* ============================================================
+   battle.css
+   バトルユニットカード・各種バー(HP/獣魂技ゲージ/EXP)
+   ============================================================ */
+
+.unit-card {
+  width: 100%;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.unit-card--down {
+  opacity: 0.4;
+}
+
+.unit-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unit-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+}
+
+.unit-card__ko {
+  font-size: var(--fs-xs);
+  color: var(--color-fire);
+}
+
+.unit-card__ready {
+  font-size: var(--fs-xs);
+  color: var(--color-gold-bright);
+  font-family: var(--font-mono);
+  animation: pulse-glow 1.1s ease-in-out infinite;
+}
+
+.battle-special-panel__hint {
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+  padding: 0 var(--space-2);
+}
+
+.battle-special-panel__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  line-height: 1.3;
+  width: 100%;
+  max-width: 220px;
+}
+
+.battle-special-panel__caster {
+  font-size: var(--fs-xs);
+  opacity: 0.8;
+}
+
+.battle-special-panel__move {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+}
+
+.bar {
+  height: 8px;
+  background: var(--color-void);
+  border: 1px solid var(--color-line);
+}
+
+.bar__fill {
+  height: 100%;
+  background: var(--color-forest);
+  transition: width 0.2s ease;
+}
+
+.bar--gauge .bar__fill {
+  background: var(--color-gold);
+}
+
+.bar--xp .bar__fill {
+  background: var(--color-water);
+}
+
+.bar__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--color-parchment-dim);
+}
+
+.detail-level {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-gold);
+  margin-top: var(--space-1);
+}

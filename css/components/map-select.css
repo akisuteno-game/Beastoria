@@ -1,0 +1,27 @@
+/* ============================================================
+   map-select.css
+   マップ選択画面
+   ============================================================ */
+
+.map-select-item {
+  margin-bottom: var(--space-3);
+  cursor: pointer;
+}
+
+.map-select-item__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-gold-bright);
+}
+
+.map-select-item__status {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-parchment-dim);
+  margin-top: var(--space-1);
+}
+
+.map-select-item--locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

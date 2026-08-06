@@ -1,0 +1,40 @@
+/* ============================================================
+   panel.css
+   シグネチャー要素:「額縁ウィンドウ」— 四隅を斜めに切り欠いた
+   ドット絵RPG風のパネル。ビーストリア全体でこの形状を統一使用する。
+   ============================================================ */
+
+.panel {
+  --n: var(--notch);
+  background: var(--color-panel);
+  border: 2px solid var(--color-line);
+  clip-path: polygon(
+    var(--n) 0, calc(100% - var(--n)) 0,
+    100% var(--n), 100% calc(100% - var(--n)),
+    calc(100% - var(--n)) 100%, var(--n) 100%,
+    0 calc(100% - var(--n)), 0 var(--n)
+  );
+  padding: var(--space-3);
+}
+
+.panel--raised {
+  background: var(--color-panel-raised);
+  border-color: var(--color-line-bright);
+}
+
+/* ロゴ */
+.logo {
+  font-size: var(--fs-xxl);
+  color: var(--color-gold-bright);
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--color-void);
+}
+
+.logo__sub {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--color-parchment-dim);
+  letter-spacing: 0.3em;
+  margin-top: var(--space-2);
+}
