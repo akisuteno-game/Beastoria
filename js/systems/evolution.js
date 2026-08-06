@@ -10,6 +10,7 @@
 
 import { getNextEvolutionData } from '../data/evolutions.js';
 import { recomputeStats } from './leveling.js';
+import { updateDisplayName } from './nameDisplay.js';
 
 export const EVOLUTION_STONE_COST = 20;
 export const MAX_EVOLUTION_STAGE = 3;
@@ -32,7 +33,8 @@ export function evolveMonster(instance, inventory) {
   inventory.consumeStones(primaryAttribute, EVOLUTION_STONE_COST);
 
   instance.evolutionStage = evo.stage;
-  instance.name = evo.name;
+  instance.coreName = evo.name;
+  updateDisplayName(instance); // 異姙化で得た属性パーツを引き継いだまま名前を更新
   instance.formGrowth = evo.statGrowth;
   recomputeStats(instance);
 
